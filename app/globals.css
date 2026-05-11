@@ -1,26 +1,152 @@
 @import "tailwindcss";
 
+/* ─────────────────────────────────────────────────────────────────────────
+   NotaryFlow design tokens. Values are committed in PLANNING.md §7.
+   Light is the default; .dark on <html> swaps in dark values.
+   ───────────────────────────────────────────────────────────────────────── */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* surfaces */
+  --bg:            #FAFAF7;
+  --surface:       #FFFFFF;
+  --surface-2:     #F2F1EC;
+
+  /* lines */
+  --border:        #E6E4DC;
+  --border-strong: #D1CEC2;
+
+  /* text */
+  --text:          #0E1410;
+  --text-muted:    #5C6360;
+  --text-subtle:   #8A8F8B;
+
+  /* brand */
+  --accent:        #0F5132;
+  --accent-hover:  #0B4128;
+  --accent-soft:   #E4EFE7;
+  --accent-fg:     #FAFAF7;
+
+  /* status */
+  --success:       #2F7A4E;
+  --warning:       #B7791F;
+  --danger:        #A1281C;
+
+  /* radius */
+  --radius-sm:     6px;
+  --radius:        10px;
+  --radius-lg:     16px;
+
+  /* shadow */
+  --shadow-sm: 0 1px 0 rgba(14, 20, 16, 0.04), 0 1px 2px rgba(14, 20, 16, 0.04);
+  --shadow-md: 0 8px 24px -8px rgba(14, 20, 16, 0.12), 0 2px 6px rgba(14, 20, 16, 0.06);
+
+  /* motion */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  color-scheme: light;
 }
 
+.dark {
+  --bg:            #0B0F0C;
+  --surface:       #11161300;
+  --surface-2:     #161C18;
+  --border:        #22281F;
+  --border-strong: #2E342B;
+  --text:          #ECEEE9;
+  --text-muted:    #9CA39E;
+  --text-subtle:   #6D746F;
+  --accent:        #3CCB7F;
+  --accent-hover:  #54D88E;
+  --accent-soft:   #15281D;
+  --accent-fg:     #08110B;
+  --success:       #4EBE7A;
+  --warning:       #E5B153;
+  --danger:        #E07260;
+  --shadow-sm: 0 1px 0 rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 10px 30px -8px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(0, 0, 0, 0.4);
+  color-scheme: dark;
+}
+
+/* Tailwind v4 theme — map tokens to utility classes */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg:            var(--bg);
+  --color-surface:       var(--surface);
+  --color-surface-2:     var(--surface-2);
+  --color-border:        var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-text:          var(--text);
+  --color-text-muted:    var(--text-muted);
+  --color-text-subtle:   var(--text-subtle);
+  --color-accent:        var(--accent);
+  --color-accent-hover:  var(--accent-hover);
+  --color-accent-soft:   var(--accent-soft);
+  --color-accent-fg:     var(--accent-fg);
+  --color-success:       var(--success);
+  --color-warning:       var(--warning);
+  --color-danger:        var(--danger);
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+
+  --radius-sm: 6px;
+  --radius:    10px;
+  --radius-lg: 16px;
+
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ─────────────────────────────────────────────────────────────────────────
+   Base
+   ───────────────────────────────────────────────────────────────────────── */
+* {
+  border-color: var(--border);
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+/* Editorial type scale — used in @apply / className. Tracking is intentional. */
+.t-display { font-size: clamp(2.75rem, 6vw, 4.5rem); line-height: 1.02; letter-spacing: -0.025em; font-weight: 600; }
+.t-h1      { font-size: clamp(2.25rem, 4.5vw, 3rem);   line-height: 1.08; letter-spacing: -0.02em;  font-weight: 500; }
+.t-h2      { font-size: clamp(1.625rem, 3vw, 2rem);    line-height: 1.15; letter-spacing: -0.015em; font-weight: 500; }
+.t-h3      { font-size: 1.375rem; line-height: 1.3;  letter-spacing: -0.01em; font-weight: 500; }
+.t-body-lg { font-size: 1.125rem; line-height: 1.55; }
+.t-body    { font-size: 1rem;     line-height: 1.6;  }
+.t-small   { font-size: 0.875rem; line-height: 1.5;  }
+.t-caption { font-size: 0.75rem;  line-height: 1.4;  letter-spacing: 0.04em; font-weight: 500; font-family: var(--font-mono); text-transform: uppercase; }
+
+/* Focus ring — accessible, never a glow */
+:where(button, a, input, textarea, select, [role="button"]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Respect reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Hairline divider used across landing */
+.hairline { height: 1px; background: var(--border); }
+
+/* Grid backdrop for the product mock — subtle */
+.grid-bg {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--border) 60%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--border) 60%, transparent) 1px, transparent 1px);
+  background-size: 32px 32px;
 }
