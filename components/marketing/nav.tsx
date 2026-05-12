@@ -28,15 +28,13 @@ export function MarketingNav() {
         <Link href="/" className="text-[var(--text)]">
           <Logo />
         </Link>
-        <nav className="hidden md:flex items-center gap-8 text-sm text-[var(--text-muted)]">
-          <a href="#why" className="hover:text-[var(--text)] transition-colors">Why switch</a>
-          <a href="#pipeline" className="hover:text-[var(--text)] transition-colors">Pipeline</a>
-          <a href="#pricing" className="hover:text-[var(--text)] transition-colors">Pricing</a>
-        </nav>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 sm:gap-5">
           <ThemeToggle className="hidden sm:inline-flex" />
-          <Link href="/login" className="hidden sm:inline-flex text-sm text-[var(--text-muted)] hover:text-[var(--text)] transition-colors">
-            Log in
+          <Link
+            href="/login"
+            className="text-sm text-[var(--text-muted)] hover:text-[var(--text)] transition-colors"
+          >
+            Sign in
           </Link>
           <Link href="/sign-up">
             <Button size="sm">Start free trial</Button>

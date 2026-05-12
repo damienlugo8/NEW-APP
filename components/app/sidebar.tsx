@@ -18,12 +18,12 @@ import { cn } from "@/lib/utils";
 type Item = { href: string; label: string; icon: LucideIcon; soon?: boolean };
 
 const NAV: Item[] = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/calendar",  label: "Calendar",  icon: CalendarDays, soon: true },
-  { href: "/journal",   label: "Journal",   icon: BookOpen, soon: true },
-  { href: "/pipeline",  label: "Pipeline",  icon: KanbanSquare, soon: true },
-  { href: "/clients",   label: "Clients",   icon: Users, soon: true },
-  { href: "/invoices",  label: "Invoices",  icon: Receipt, soon: true },
+  { href: "/dashboard",    label: "Dashboard",    icon: LayoutDashboard },
+  { href: "/appointments", label: "Appointments", icon: CalendarDays },
+  { href: "/journal",      label: "Journal",      icon: BookOpen },
+  { href: "/pipeline",     label: "Pipeline",     icon: KanbanSquare },
+  { href: "/clients",      label: "Clients",      icon: Users,         soon: true },
+  { href: "/invoices",     label: "Invoices",     icon: Receipt,       soon: true },
 ];
 
 export function Sidebar() {

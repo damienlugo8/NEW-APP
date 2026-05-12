@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { Sidebar } from "@/components/app/sidebar";
 import { TopBar } from "@/components/app/topbar";
+import { MobileNav } from "@/components/app/mobile-nav";
 import { supabaseServer } from "@/lib/supabase/server";
 import { supabaseConfigured } from "@/lib/env";
 import { ConfigureBanner } from "@/components/app/configure-banner";
@@ -17,6 +18,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           <ConfigureBanner />
           <main className="flex-1">{children}</main>
         </div>
+        <MobileNav />
       </div>
     );
   }
@@ -32,6 +34,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         <TopBar email={data.user.email ?? ""} />
         <main className="flex-1">{children}</main>
       </div>
+      <MobileNav />
     </div>
   );
 }

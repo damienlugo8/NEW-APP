@@ -4,7 +4,6 @@ import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ProductMock } from "./product-mock";
-import { ArrowRight } from "lucide-react";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -18,33 +17,32 @@ export function Hero() {
           initial={{ opacity: 0, y: reduce ? 0 : 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease }}
-          className="t-caption text-[var(--text-subtle)] mb-6 flex items-center gap-2"
+          className="t-caption text-[var(--text-subtle)] mb-7 flex items-center gap-2"
         >
           <span className="inline-block h-1 w-1 rounded-full bg-[var(--accent)]" />
-          For solo mobile notaries &amp; loan signing agents
+          For mobile notaries &amp; loan signing agents
         </motion.p>
 
-        {/* Headline */}
+        {/* Headline — Instrument Serif. Italic on the verb-y bit. */}
         <motion.h1
           initial={{ opacity: 0, y: reduce ? 0 : 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease, delay: 0.05 }}
-          className="t-display max-w-[18ch]"
+          className="t-display-serif max-w-[22ch]"
         >
-          Run the entire signing business
-          <span className="text-[var(--text-muted)]"> from your phone.</span>
+          Your notary business in <em>one</em> app.
         </motion.h1>
 
-        {/* Subhead */}
+        {/* Subhead — plain English. */}
         <motion.p
           initial={{ opacity: 0, y: reduce ? 0 : 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease, delay: 0.12 }}
           className="t-body-lg text-[var(--text-muted)] mt-6 max-w-[58ch]"
         >
-          Journal, scheduling, mileage, invoicing — and the first real sales pipeline
-          for the outreach that actually grows your income. The notary tools you grew
-          up with were built in 2015. This one wasn&apos;t.
+          The journal, the calendar, the invoices, the title companies you&apos;re still
+          chasing — finally in one place. Built for the phone in your hand, not the
+          desk you don&apos;t sit at.
         </motion.p>
 
         {/* CTAs */}
@@ -52,19 +50,18 @@ export function Hero() {
           initial={{ opacity: 0, y: reduce ? 0 : 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease, delay: 0.2 }}
-          className="mt-8 flex flex-wrap items-center gap-3"
+          className="mt-9 flex flex-wrap items-center gap-3"
         >
           <Link href="/sign-up">
-            <Button size="lg">Start 14-day trial</Button>
+            <Button size="lg">Start 14-day free trial</Button>
           </Link>
-          <Link href="#why">
-            <Button size="lg" variant="ghost">
-              See what&apos;s different
-              <ArrowRight size={16} strokeWidth={1.75} />
+          <Link href="#features">
+            <Button size="lg" variant="secondary">
+              See how it works
             </Button>
           </Link>
           <span className="font-mono text-xs text-[var(--text-subtle)] ml-1">
-            No card required.
+            No credit card. Cancel any time.
           </span>
         </motion.div>
 

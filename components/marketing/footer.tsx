@@ -12,9 +12,9 @@ export function MarketingFooter() {
           </p>
         </div>
         <FooterCol title="Product">
-          <FooterLink href="#why">Why switch</FooterLink>
-          <FooterLink href="#pipeline">Pipeline</FooterLink>
+          <FooterLink href="#features">Features</FooterLink>
           <FooterLink href="#pricing">Pricing</FooterLink>
+          <FooterLink href="#faq">FAQ</FooterLink>
         </FooterCol>
         <FooterCol title="Company">
           <FooterLink href="/legal/privacy">Privacy</FooterLink>

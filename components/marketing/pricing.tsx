@@ -9,14 +9,14 @@ const tiers = [
     name: "Trial",
     price: "Free",
     cadence: "14 days",
-    blurb: "Everything in Pro, no card needed. So you can decide on the work, not the marketing.",
+    blurb: "Everything in Pro for two weeks. No card. Cancel by walking away.",
     cta: "Start free trial",
     href: "/sign-up?plan=trial",
     featured: false,
     features: [
-      "Full journal & appointments",
+      "Full journal &amp; appointments",
       "Pipeline CRM",
-      "Mileage & invoicing",
+      "Invoicing",
       "1 user",
     ],
   },
@@ -25,15 +25,15 @@ const tiers = [
     name: "Solo",
     price: "$19",
     cadence: "per month",
-    blurb: "The signing essentials. For notaries focused on closing the work in front of them.",
+    blurb: "The basics. For notaries focused on closing the work in front of them.",
     cta: "Choose Solo",
     href: "/sign-up?plan=solo",
     featured: false,
     features: [
       "Notary journal (state-compliant)",
-      "Appointments & calendar sync",
+      "Appointments &amp; calendar",
       "Mileage tracking",
-      "Invoicing & payment links",
+      "Invoicing",
       "Email support",
     ],
   },
@@ -42,16 +42,16 @@ const tiers = [
     name: "Pro",
     price: "$39",
     cadence: "per month",
-    blurb: "Everything in Solo, plus the differentiator — the sales pipeline that turns rosters into revenue.",
+    blurb: "Solo plus the Pipeline — the part that grows your business.",
     cta: "Choose Pro",
     href: "/sign-up?plan=pro",
     featured: true,
     features: [
       "Everything in Solo",
-      "Pipeline CRM",
-      "Last-contact reminders",
-      "Revenue by referrer",
-      "Custom invoice branding",
+      "Sales Pipeline CRM",
+      "Activity log per contact",
+      "Email templates",
+      "Smart follow-up reminders",
       "Priority support",
     ],
   },
@@ -63,12 +63,12 @@ export function Pricing() {
       <div className="mx-auto max-w-[1200px] px-6 md:px-10">
         <Reveal>
           <p className="t-caption text-[var(--text-subtle)] mb-5">Pricing</p>
-          <h2 className="t-h1 max-w-[18ch]">
-            One price for the work. One for the pipeline.
+          <h2 className="t-h2-serif max-w-[18ch]">
+            One price for the work. <em>One</em> for the pipeline.
           </h2>
           <p className="t-body-lg text-[var(--text-muted)] mt-6 max-w-[58ch]">
-            Cancel anytime. Annual billing saves 20% — available once we wire payments
-            live. Until then, the trial gives you the whole product.
+            Cancel any time from your phone — no email, no hold music. The trial gives
+            you the entire product so you can decide on the tool, not the marketing.
           </p>
         </Reveal>
 
@@ -96,7 +96,7 @@ function PricingCard({ tier }: { tier: (typeof tiers)[number] }) {
     >
       {tier.featured && (
         <span className="absolute -top-2.5 left-7 t-caption px-2 py-0.5 rounded-full bg-[var(--accent)] text-[var(--accent-fg)]">
-          The differentiator
+          Recommended
         </span>
       )}
       <div className="flex items-baseline justify-between">
@@ -111,8 +111,8 @@ function PricingCard({ tier }: { tier: (typeof tiers)[number] }) {
       <ul className="mt-6 flex flex-col gap-2.5">
         {tier.features.map((f) => (
           <li key={f} className="flex items-start gap-2.5 text-sm">
-            <Check size={15} strokeWidth={1.75} className="text-[var(--accent)] mt-[2px] shrink-0" />
-            <span>{f}</span>
+            <Check size={15} className="text-[var(--accent)] mt-[2px] shrink-0" />
+            <span dangerouslySetInnerHTML={{ __html: f }} />
           </li>
         ))}
       </ul>

@@ -85,8 +85,9 @@
   --color-warning:       var(--warning);
   --color-danger:        var(--danger);
 
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+  --font-sans:  var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono:  var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+  --font-serif: var(--font-instrument-serif), ui-serif, Georgia, "Times New Roman", serif;
 
   --radius-sm: 6px;
   --radius:    10px;
@@ -116,6 +117,25 @@ html, body {
 }
 
 /* Editorial type scale — used in @apply / className. Tracking is intentional. */
+/* Serif display face — landing only. Italic accent is what makes the pairing sing. */
+.t-display-serif {
+  font-family: var(--font-serif);
+  font-size: clamp(2.5rem, 6.5vw, 5rem);
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+  font-weight: 400;
+}
+.t-display-serif em { font-style: italic; }
+
+.t-h2-serif {
+  font-family: var(--font-serif);
+  font-size: clamp(1.875rem, 4.2vw, 2.75rem);
+  line-height: 1.08;
+  letter-spacing: -0.012em;
+  font-weight: 400;
+}
+.t-h2-serif em { font-style: italic; }
+
 .t-display { font-size: clamp(2.75rem, 6vw, 4.5rem); line-height: 1.02; letter-spacing: -0.025em; font-weight: 600; }
 .t-h1      { font-size: clamp(2.25rem, 4.5vw, 3rem);   line-height: 1.08; letter-spacing: -0.02em;  font-weight: 500; }
 .t-h2      { font-size: clamp(1.625rem, 3vw, 2rem);    line-height: 1.15; letter-spacing: -0.015em; font-weight: 500; }
@@ -149,4 +169,23 @@ html, body {
     linear-gradient(to right, color-mix(in oklab, var(--border) 60%, transparent) 1px, transparent 1px),
     linear-gradient(to bottom, color-mix(in oklab, var(--border) 60%, transparent) 1px, transparent 1px);
   background-size: 32px 32px;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Print stylesheet — used by journal entry detail to produce a clean PDF
+   when the user taps "Print / save PDF". We hide the app chrome and force
+   the page to plain black on white.
+   ───────────────────────────────────────────────────────────────────────── */
+@media print {
+  html, body { background: #fff !important; color: #000 !important; }
+  /* Strip the in-app sidebar + topbar + mobile nav. */
+  aside, header, nav, footer.app-footer, .print\:hidden { display: none !important; }
+  .print\:border-0  { border-width: 0 !important; }
+  .print\:rounded-none { border-radius: 0 !important; }
+  .print\:py-3 { padding-top: .75rem !important; padding-bottom: .75rem !important; }
+  .print\:py-4 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
+  .print\:text-2xl { font-size: 1.5rem !important; line-height: 2rem !important; }
+  /* Make sure body text and labels are dark on white. */
+  * { color-adjust: exact; -webkit-print-color-adjust: exact; }
+  a { color: #000 !important; text-decoration: none !important; }
 }

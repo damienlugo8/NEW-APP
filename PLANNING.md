@@ -427,3 +427,138 @@ A reminder list, taped to the wall:
 ---
 
 End of plan. Building from here.
+
+---
+
+# Session 2 — Landing rewrite + the three core features
+
+> Appended after session 1. Decisions that change foundation values are explicitly called out.
+
+## S2.1 What we're shipping this session
+
+1. **Landing rewrite** — new copy, new typography pairing, FAQ + features sections, sharper competitive positioning.
+2. **Appointments** — full CRUD, calendar grid + list view, today widget on dashboard.
+3. **Notary Journal** — append-only entries with signature canvas, list + detail.
+4. **Sales Pipeline (the differentiator)** — kanban + list, contact detail panel with activity log, email templates, follow-up reminders.
+
+Feature order is deliberate: Appointments → Journal → Pipeline. The Journal links to Appointments. The Pipeline is the differentiator and gets the most design love.
+
+## S2.2 Decisions made this session
+
+### S2.2.1 Typography — upgraded
+Adding **Instrument Serif** for editorial display headlines (hero, section h1/h2 on the landing page). Geist Sans stays as the body + UI face. Geist Mono stays for small details. Rationale:
+
+- Instrument Serif is free (Google Fonts), variable, and currently on-trend in premium SaaS (Attio uses similar; Vercel and Linear lean into sans-serif geometric but the rest of the field is moving toward serif accents in headlines).
+- Sans-only is "tech." Sans + editorial serif is "considered." Notaries are middle-aged women, often coming from paper-and-pen workflows — a hint of serif signals seriousness and craft without making the UI feel old.
+- The serif is **landing-page-only**. Dashboard headlines stay sans for legibility at small sizes and in a fast-moving operational context.
+
+Updated type roles:
+
+| Role | Face | Use |
+|---|---|---|
+| Display (landing only) | **Instrument Serif** | hero h1, major section h1/h2 |
+| Display (app) | Geist Sans 600/500 | dashboard headlines |
+| Body | Geist Sans 400 | everywhere |
+| Caption / detail | Geist Mono 500 | timestamps, status, version |
+
+### S2.2.2 Trial UX — confirmed no-card
+14-day free trial with **no credit card required**. Reasoning:
+
+- Stripe isn't wired yet — we don't have keys.
+- Customer profile (50-year-old notary in NJ, in her car, on her phone) is friction-allergic. Adding a card up front cuts signups disproportionately for this audience.
+- The product is sticky once they log a signing — the journal lives in our DB and they're not going to retype 14 days of entries elsewhere.
+- We add card requirement later if churn at day 14 is too high.
+
+Documented for the eventual Stripe wiring: when we turn billing on, we keep no-card-trial — start subscription in `trialing` status with no `payment_method`; require card to convert to `active` on day 14.
+
+### S2.2.3 Pipeline Pro-gating
+- Trial gives access to everything (including Pipeline).
+- After trial: Solo plan ($19) does not include Pipeline. Visiting `/pipeline` shows a designed upgrade overlay over a blurred preview of the kanban — not a full block. They see what they're missing.
+- Pro plan ($39) unlocks Pipeline.
+
+### S2.2.4 Library choices
+- **Calendar:** custom grid (no react-big-calendar). RBC's CSS is hard to override without it looking like RBC; we want a Linear-feeling month view. A simple grid + day cells is ~150 lines and matches our type system.
+- **Drag and drop:** `@dnd-kit/core` + `@dnd-kit/sortable`. Modern, accessible, RSC-friendly.
+- **Signature canvas:** `signature_pad` directly (no React wrapper). Smaller; we control the lifecycle.
+- **PDF export:** deferred this session. Stub a "Download PDF" button that prints a styled HTML page (`window.print()` with a print stylesheet) — looks identical, no dep, no extra work. Real `@react-pdf/renderer` next session.
+
+### S2.2.5 Copy voice
+Landing copy gets rewritten in plain English. No "all-in-one platform." No "streamline." No "seamlessly." Every section is one idea, one sentence to anchor it, one supporting paragraph.
+
+Banned words: *seamlessly, robust, solutions, unlock, leverage, empower, supercharge, transform.* If I catch myself reaching for one, the section needs rewriting.
+
+## S2.3 Schema additions
+
+Migration `0002_features.sql` is additive — no breaking changes to foundation tables.
+
+### Update to `appointments` (the table from session 1)
+Add columns to match the richer form:
+
+| Column | Type | Notes |
+|---|---|---|
+| `client_name` | text | the company or person being notarized for |
+| `location_address` / `location_city` / `location_state` / `location_zip` | text | split for map/sort |
+| `document_type` | text | "Loan signing", "POA", "Will", etc. |
+
+`location` (single text) is dropped in favor of the four split columns. `title` becomes optional and is derived as `document_type — client_name`.
+
+### Update to `journal_entries`
+Add the legally-relevant columns:
+
+| Column | Type | Notes |
+|---|---|---|
+| `appointment_id` | uuid nullable | link from form auto-fill |
+| `signer_address` | text |  |
+| `id_type` | text | "Driver's license" / "Passport" / etc. |
+| `id_number_last4` | text | **only last 4 stored** — never the full number |
+| `id_issuing_state` | text |  |
+| `witness_name` | text nullable |  |
+| `signature_svg` | text | the captured signature as SVG path data |
+| `fee_charged_cents` | integer | (rename of `fee_cents`) |
+
+**Immutability:** RLS restricts journal entries to INSERT and SELECT — there is no UPDATE policy. The DB enforces append-only at the row level, not the app layer. This is the legally important property.
+
+### New table — `contacts`
+Replaces the session-1 `clients` table. Same idea, fuller schema.
+
+| Column | Type | Notes |
+|---|---|---|
+| `id` | uuid PK |  |
+| `user_id` | uuid FK |  |
+| `company_name` | text |  |
+| `contact_name` | text |  |
+| `contact_role` | text | "Closing coordinator", "Paralegal", etc. |
+| `phone` / `email` / `address` | text |  |
+| `stage` | enum | `prospect` / `contacted` / `following_up` / `active_client` / `inactive` |
+| `notes` | text |  |
+| `last_contacted_at` / `next_followup_at` | timestamptz |  |
+
+### New table — `contact_activities`
+One row per touch. Surfaces in the contact detail panel and powers reminders.
+
+| Column | Type | Notes |
+|---|---|---|
+| `id` | uuid PK |  |
+| `contact_id` | uuid FK ON DELETE CASCADE |  |
+| `user_id` | uuid | denormalized for RLS |
+| `activity_type` | enum | `email` / `call` / `meeting` / `note` |
+| `activity_date` | timestamptz |  |
+| `summary` | text |  |
+
+RLS pattern: same owner-only policies as everywhere else.
+
+## S2.4 Mobile information architecture
+
+- Desktop: left sidebar (Dashboard, Appointments, Journal, Pipeline, Settings).
+- Mobile (< 1024px): bottom tab bar with the same five items. Sidebar collapses entirely. The bottom bar is fixed, 64px tall, safe-area-aware (iOS notch).
+
+## S2.5 What stays "next session"
+
+- Real PDF export for journal (currently print stylesheet).
+- Stripe wiring + Pro-paywall conversion flow (currently just an upgrade CTA).
+- Mileage tracker (planned but not in this session).
+- Invoicing CRUD (table existed in v1; UI deferred).
+- Resend templates, Upstash rate limit, cross-tenant integration test (unchanged from session 1).
+
+End of session 2 plan. Building from here.
+
