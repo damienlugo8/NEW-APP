@@ -76,7 +76,7 @@ export function CalendarGrid({
             onClick={() => setCursor((c) => addMonths(c, -1))}
             aria-label="Previous month"
           >
-            <ChevronLeft size={16} strokeWidth={1.75} />
+            <ChevronLeft size={16} strokeWidth={1.5} />
           </Button>
           <h2 className="t-h3 text-base sm:text-lg min-w-[12ch] text-center">
             {format(cursor, "MMMM yyyy")}
@@ -88,7 +88,7 @@ export function CalendarGrid({
             onClick={() => setCursor((c) => addMonths(c, 1))}
             aria-label="Next month"
           >
-            <ChevronRight size={16} strokeWidth={1.75} />
+            <ChevronRight size={16} strokeWidth={1.5} />
           </Button>
         </div>
         <Button

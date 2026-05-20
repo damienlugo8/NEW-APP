@@ -87,7 +87,7 @@ export function SignaturePadField({
           className="inline-flex items-center gap-1 text-xs text-[var(--text-subtle)] hover:text-[var(--text)] transition-colors disabled:opacity-40"
           disabled={!hasInk}
         >
-          <Eraser size={12} strokeWidth={1.75} /> Clear
+          <Eraser size={12} strokeWidth={1.5} /> Clear
         </button>
       </div>
       <div className="relative rounded-[var(--radius-sm)] border border-[var(--border-strong)] bg-[var(--surface)] overflow-hidden">

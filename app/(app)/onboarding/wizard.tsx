@@ -49,23 +49,31 @@ export function OnboardingWizard() {
 
   return (
     <div className="w-full max-w-[520px]">
-      {/* Progress */}
-      <div className="flex items-center gap-2 mb-10">
+      {/* Progress — gradient fills feel less utilitarian than bars */}
+      <div className="flex items-center gap-1.5 mb-8">
         {STEPS.map((s, i) => (
           <div
             key={s.id}
             className={cn(
-              "h-1 flex-1 rounded-full transition-colors duration-300",
-              i <= step ? "bg-[var(--accent)]" : "bg-[var(--border)]"
+              "h-[3px] flex-1 rounded-full transition-all duration-500",
+              i < step && "bg-[var(--accent)]",
+              i === step && "bg-gradient-to-r from-[var(--accent)] to-[var(--accent-soft-2)]",
+              i > step && "bg-[var(--border)]"
             )}
           />
         ))}
       </div>
-      <p className="t-caption text-[var(--text-subtle)] mb-3">
+      <p className="t-caption text-[var(--text-subtle)] mb-4">
         Step {step + 1} of {STEPS.length}
       </p>
-      <h1 className="t-h2">{STEPS[step].title}</h1>
-      <p className="t-body text-[var(--text-muted)] mt-2">{STEPS[step].sub}</p>
+      <h1 className="t-h2 leading-tight">
+        <span className="font-serif italic text-[var(--text-muted)]">
+          {step === 0 ? "Welcome." : step === STEPS.length - 1 ? "Almost there." : "Next up."}
+        </span>
+        <br />
+        {STEPS[step].title}
+      </h1>
+      <p className="t-body text-[var(--text-muted)] mt-3 max-w-[44ch]">{STEPS[step].sub}</p>
 
       <form action={action} className="mt-8">
         <AnimatePresence mode="wait">
@@ -170,7 +178,7 @@ export function OnboardingWizard() {
             onClick={() => setStep((s) => Math.max(0, s - 1))}
             disabled={step === 0}
           >
-            <ArrowLeft size={15} strokeWidth={1.75} /> Back
+            <ArrowLeft size={15} strokeWidth={1.5} /> Back
           </Button>
           {step < STEPS.length - 1 ? (
             <Button
@@ -178,7 +186,7 @@ export function OnboardingWizard() {
               onClick={() => setStep((s) => s + 1)}
               disabled={!canAdvance()}
             >
-              Continue <ArrowRight size={15} strokeWidth={1.75} />
+              Continue <ArrowRight size={15} strokeWidth={1.5} />
             </Button>
           ) : (
             <Button type="submit" loading={pending}>

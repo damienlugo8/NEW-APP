@@ -134,12 +134,12 @@ export function ProductMock() {
             >
               <div className="flex items-center gap-3 min-w-0">
                 <div className="h-9 w-9 rounded-[8px] bg-[var(--accent-soft)] text-[var(--accent)] inline-flex items-center justify-center shrink-0">
-                  <CalendarDays size={16} strokeWidth={1.75} />
+                  <CalendarDays size={16} strokeWidth={1.5} />
                 </div>
                 <div className="min-w-0">
                   <p className="text-sm font-medium truncate">Loan signing — 47 Ridge Rd, Mahwah NJ</p>
                   <p className="text-xs text-[var(--text-muted)] flex items-center gap-1.5">
-                    <MapPin size={12} strokeWidth={1.75} />
+                    <MapPin size={12} strokeWidth={1.5} />
                     Today · 2:30 PM · $185 fee
                   </p>
                 </div>
@@ -219,7 +219,7 @@ function DealCard({
     <div className="rounded-[8px] border border-[var(--border)] bg-[var(--surface)] p-3 hover:border-[var(--border-strong)] transition-colors">
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-center gap-2 min-w-0">
-          <Building2 size={13} strokeWidth={1.75} className="text-[var(--text-subtle)] shrink-0" />
+          <Building2 size={13} strokeWidth={1.5} className="text-[var(--text-subtle)] shrink-0" />
           <p className="text-[13px] font-medium truncate">{company}</p>
         </div>
         <span className={"h-1.5 w-1.5 rounded-full mt-1.5 " + dot} />

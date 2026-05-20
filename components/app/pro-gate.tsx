@@ -41,7 +41,7 @@ export function ProGate({
       >
         <div className="max-w-[440px] w-full rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] shadow-[var(--shadow-md)] p-6 text-center">
           <div className="mx-auto h-10 w-10 rounded-full bg-[var(--accent-soft)] text-[var(--accent)] inline-flex items-center justify-center">
-            <Sparkles size={16} strokeWidth={1.75} />
+            <Sparkles size={16} strokeWidth={1.5} />
           </div>
           <p className="t-caption text-[var(--text-subtle)] mt-4 mb-2 inline-flex items-center gap-1.5">
             <Lock size={11} strokeWidth={2} /> Pro feature

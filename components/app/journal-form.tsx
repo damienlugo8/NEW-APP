@@ -57,7 +57,7 @@ export function JournalForm({
       <div className="rounded-[var(--radius-lg)] border border-[color-mix(in_oklab,var(--warning)_30%,transparent)] bg-[color-mix(in_oklab,var(--warning)_8%,transparent)] p-4 flex gap-3">
         <AlertTriangle
           size={18}
-          strokeWidth={1.75}
+          strokeWidth={1.5}
           className="shrink-0 text-[var(--warning)] mt-0.5"
         />
         <div>

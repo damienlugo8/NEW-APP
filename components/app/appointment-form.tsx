@@ -153,7 +153,7 @@ export function AppointmentForm({
                 onClick={onClose}
                 aria-label="Close"
               >
-                <X size={16} strokeWidth={1.75} />
+                <X size={16} strokeWidth={1.5} />
               </Button>
             </header>
 
@@ -286,7 +286,7 @@ export function AppointmentForm({
                     loading={deleting}
                     onClick={handleDelete}
                   >
-                    <Check size={14} strokeWidth={1.75} /> Really delete
+                    <Check size={14} strokeWidth={1.5} /> Really delete
                   </Button>
                 ) : (
                   <Button
@@ -295,7 +295,7 @@ export function AppointmentForm({
                     size="sm"
                     onClick={() => setConfirmDelete(true)}
                   >
-                    <Trash2 size={14} strokeWidth={1.75} /> Delete
+                    <Trash2 size={14} strokeWidth={1.5} /> Delete
                   </Button>
                 )
               ) : (

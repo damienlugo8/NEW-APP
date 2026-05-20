@@ -52,14 +52,14 @@ export function JournalDetail({
           href="/journal"
           className="inline-flex items-center gap-1.5 text-sm text-[var(--text-muted)] hover:text-[var(--text)] transition-colors"
         >
-          <ArrowLeft size={14} strokeWidth={1.75} /> All entries
+          <ArrowLeft size={14} strokeWidth={1.5} /> All entries
         </Link>
         <Button
           size="sm"
           variant="secondary"
           onClick={() => window.print()}
         >
-          <Printer size={14} strokeWidth={1.75} /> Print / save PDF
+          <Printer size={14} strokeWidth={1.5} /> Print / save PDF
         </Button>
       </div>
 

@@ -61,7 +61,7 @@ export function EmailTemplates({ contact }: { contact: Contact }) {
                 </div>
                 <ChevronDown
                   size={15}
-                  strokeWidth={1.75}
+                  strokeWidth={1.5}
                   className={cn(
                     "shrink-0 text-[var(--text-subtle)] transition-transform duration-200",
                     open && "rotate-180"
@@ -87,7 +87,7 @@ export function EmailTemplates({ contact }: { contact: Contact }) {
                       <div className="flex items-center gap-2 mt-4">
                         <a href={href}>
                           <Button size="sm">
-                            <Send size={13} strokeWidth={1.75} />
+                            <Send size={13} strokeWidth={1.5} />
                             {contact.email ? "Send in mail app" : "Open mail app"}
                           </Button>
                         </a>
@@ -105,17 +105,17 @@ export function EmailTemplates({ contact }: { contact: Contact }) {
                         >
                           {copiedId === tpl.id ? (
                             <>
-                              <Check size={13} strokeWidth={1.75} /> Copied
+                              <Check size={13} strokeWidth={1.5} /> Copied
                             </>
                           ) : (
                             <>
-                              <Copy size={13} strokeWidth={1.75} /> Copy
+                              <Copy size={13} strokeWidth={1.5} /> Copy
                             </>
                           )}
                         </Button>
                         {contact.email && (
                           <span className="text-[11px] text-[var(--text-subtle)] inline-flex items-center gap-1 ml-auto">
-                            <Mail size={11} strokeWidth={1.75} /> {contact.email}
+                            <Mail size={11} strokeWidth={1.5} /> {contact.email}
                           </span>
                         )}
                       </div>

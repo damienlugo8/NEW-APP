@@ -45,7 +45,7 @@ export function ContactDetail({
         href="/pipeline"
         className="inline-flex items-center gap-1.5 text-sm text-[var(--text-muted)] hover:text-[var(--text)] transition-colors mb-6"
       >
-        <ArrowLeft size={14} strokeWidth={1.75} /> Pipeline
+        <ArrowLeft size={14} strokeWidth={1.5} /> Pipeline
       </Link>
 
       <header className="mb-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
@@ -70,7 +70,7 @@ export function ContactDetail({
           )}
         </div>
         <Button size="sm" variant="secondary" onClick={() => setEditing(true)}>
-          <Pencil size={14} strokeWidth={1.75} /> Edit
+          <Pencil size={14} strokeWidth={1.5} /> Edit
         </Button>
       </header>
 
@@ -89,24 +89,24 @@ export function ContactDetail({
           >
             <p className="t-caption text-[var(--text-subtle)]">Details</p>
             <DetailRow
-              icon={<Mail size={14} strokeWidth={1.75} />}
+              icon={<Mail size={14} strokeWidth={1.5} />}
               label="Email"
               value={contact.email}
               href={contact.email ? `mailto:${contact.email}` : undefined}
             />
             <DetailRow
-              icon={<Phone size={14} strokeWidth={1.75} />}
+              icon={<Phone size={14} strokeWidth={1.5} />}
               label="Phone"
               value={contact.phone}
               href={contact.phone ? `tel:${contact.phone}` : undefined}
             />
             <DetailRow
-              icon={<MapPin size={14} strokeWidth={1.75} />}
+              icon={<MapPin size={14} strokeWidth={1.5} />}
               label="Address"
               value={contact.address}
             />
             <DetailRow
-              icon={<Calendar size={14} strokeWidth={1.75} />}
+              icon={<Calendar size={14} strokeWidth={1.5} />}
               label="Last contact"
               value={
                 days === null
@@ -117,7 +117,7 @@ export function ContactDetail({
               }
             />
             <DetailRow
-              icon={<Calendar size={14} strokeWidth={1.75} />}
+              icon={<Calendar size={14} strokeWidth={1.5} />}
               label="Next follow-up"
               value={
                 contact.next_followup_at

@@ -36,7 +36,7 @@ export function ThemeToggle({ className }: { className?: string }) {
                 : "text-[var(--text-muted)] hover:text-[var(--text)]"
             )}
           >
-            <Icon size={14} strokeWidth={1.75} />
+            <Icon size={14} strokeWidth={1.5} />
           </button>
         );
       })}

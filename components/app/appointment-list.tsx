@@ -40,16 +40,14 @@ export function AppointmentList({
 
   if (items.length === 0) {
     return (
-      <div className="rounded-[var(--radius-lg)] border border-dashed border-[var(--border)] bg-[var(--surface)] p-8 text-center">
-        <CalendarDays
-          size={22}
-          strokeWidth={1.5}
-          className="mx-auto text-[var(--text-subtle)]"
-        />
-        <p className="mt-3 text-sm text-[var(--text)]">
+      <div className="rounded-[var(--radius-lg)] border border-dashed border-[var(--border-strong)] bg-[color-mix(in_oklab,var(--surface)_60%,transparent)] p-10 text-center">
+        <span className="inline-flex h-11 w-11 items-center justify-center rounded-[var(--radius)] bg-[var(--accent-soft)] text-[var(--accent)] mb-4">
+          <CalendarDays size={18} strokeWidth={1.5} />
+        </span>
+        <p className="text-[15px] font-medium text-[var(--text)]">
           {filterDay ? "Nothing on this day." : "No signings yet."}
         </p>
-        <p className="mt-1 text-xs text-[var(--text-subtle)]">
+        <p className="mt-1.5 text-sm text-[var(--text-muted)] max-w-[42ch] mx-auto">
           {emptyHint ?? "Tap “New signing” to add your first one."}
         </p>
       </div>
@@ -57,7 +55,7 @@ export function AppointmentList({
   }
 
   return (
-    <ul className="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] divide-y divide-[var(--border)] overflow-hidden">
+    <ul className="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] divide-y divide-[var(--border-soft)] overflow-hidden shadow-[var(--shadow-sm)]">
       {items.map((a, i) => (
         <Row key={a.id} appointment={a} index={i} onEdit={onEdit} />
       ))}
@@ -130,7 +128,7 @@ function Row({
           </div>
           <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[var(--text-muted)]">
             <span className="inline-flex items-center gap-1">
-              <Clock size={12} strokeWidth={1.75} />
+              <Clock size={12} strokeWidth={1.5} />
               {time}
               <span className="text-[var(--text-subtle)]">
                 · {appointment.duration_min}m
@@ -138,13 +136,13 @@ function Row({
             </span>
             {loc && (
               <span className="inline-flex items-center gap-1 truncate max-w-[34ch]">
-                <MapPin size={12} strokeWidth={1.75} />
+                <MapPin size={12} strokeWidth={1.5} />
                 {loc}
               </span>
             )}
             {appointment.fee_cents > 0 && (
               <span className="inline-flex items-center gap-1">
-                <Banknote size={12} strokeWidth={1.75} />
+                <Banknote size={12} strokeWidth={1.5} />
                 {usdCents(appointment.fee_cents)}
               </span>
             )}
@@ -155,7 +153,7 @@ function Row({
           aria-hidden
           className="shrink-0 h-8 w-8 rounded-full inline-flex items-center justify-center text-[var(--text-subtle)] hover:text-[var(--text)]"
         >
-          <Pencil size={14} strokeWidth={1.75} />
+          <Pencil size={14} strokeWidth={1.5} />
         </span>
       </button>
     </motion.li>

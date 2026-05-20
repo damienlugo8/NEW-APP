@@ -79,7 +79,7 @@ export function ContactForm({
                 onClick={onClose}
                 aria-label="Close"
               >
-                <X size={16} strokeWidth={1.75} />
+                <X size={16} strokeWidth={1.5} />
               </Button>
             </header>
 

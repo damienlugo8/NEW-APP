@@ -6,12 +6,16 @@ import {
   KanbanSquare,
   Plus,
   Banknote,
-  Clock,
   Building2,
+  Sparkles,
 } from "lucide-react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Sparkline } from "@/components/ui/sparkline";
+import { SectionCard } from "@/components/app/section-card";
+import { Stat } from "@/components/app/stat";
+import { EmptyState } from "@/components/app/empty-state";
 import {
   appointmentLocationLine,
   appointmentTitle,
@@ -23,250 +27,402 @@ import {
 } from "@/lib/db/queries/appointments";
 import { countJournalEntries } from "@/lib/db/queries/journal";
 import { listOverdueContacts } from "@/lib/db/queries/contacts";
-import { type Contact, daysSince } from "@/lib/types/contact";
+import {
+  type Contact,
+  daysSince,
+  overdueSeverity,
+  type OverdueSeverity,
+} from "@/lib/types/contact";
+import {
+  dailyEarningsLast30,
+  monthOverMonthDelta,
+} from "@/lib/db/queries/earnings";
 import { getProfile } from "@/lib/auth/session";
-import { usdCents } from "@/lib/utils";
+import { usdCents, cn } from "@/lib/utils";
 
 export const metadata = { title: "Dashboard" };
 export const dynamic = "force-dynamic";
 
 function greeting() {
   const h = new Date().getHours();
-  if (h < 5) return "Late night";
+  if (h < 5) return "Still up";
   if (h < 12) return "Good morning";
   if (h < 18) return "Good afternoon";
   return "Good evening";
 }
 
+/**
+ * Synthesize today into one human sentence. Scannable on a phone in 2s.
+ *
+ *   - 0 today + overdue: nudges toward the pipeline
+ *   - 0 today + clean:   permission to breathe
+ *   - 1 today:           who + when
+ *   - 2+ today:          count, first time, last time, expected take
+ */
+function dayLine(appointments: Appointment[], overdueCount: number): string {
+  if (appointments.length === 0) {
+    if (overdueCount > 0) {
+      return overdueCount === 1
+        ? "Calendar's clear today. One contact is waiting on a nudge from you."
+        : `Calendar's clear today. ${overdueCount} contacts are waiting on a nudge from you.`;
+    }
+    return "Calendar's clear and nobody's overdue. Good day to chase one new title company.";
+  }
+
+  if (appointments.length === 1) {
+    const a = appointments[0];
+    const when = format(new Date(a.scheduled_at), "h:mm a").toLowerCase();
+    const who = a.client_name ?? appointmentTitle(a);
+    return `One signing today — ${who} at ${when}.`;
+  }
+
+  const first = format(new Date(appointments[0].scheduled_at), "h:mm a").toLowerCase();
+  const last = format(
+    new Date(appointments[appointments.length - 1].scheduled_at),
+    "h:mm a"
+  ).toLowerCase();
+  const expectedCents = appointments.reduce((sum, a) => sum + (a.fee_cents ?? 0), 0);
+  const tail =
+    expectedCents > 0
+      ? ` Expected take: ${usdCents(expectedCents)}.`
+      : "";
+  return `${appointments.length} signings today — first at ${first}, last at ${last}.${tail}`;
+}
+
 export default async function DashboardPage() {
-  const [today, summary, journalCount, overdue, profile] = await Promise.all([
+  const [today, summary, journalCount, overdue, profile, daily, mom] = await Promise.all([
     listTodaysAppointments(),
     appointmentSummary(),
     countJournalEntries(),
-    listOverdueContacts(3),
+    listOverdueContacts(4),
     getProfile(),
+    dailyEarningsLast30(),
+    monthOverMonthDelta(),
   ]);
 
   const firstName = profile?.full_legal_name?.split(/\s+/)[0] ?? "";
+  const isBrandNew =
+    today.length === 0 &&
+    overdue.length === 0 &&
+    summary.weekCount === 0 &&
+    journalCount === 0 &&
+    summary.monthRevenueCents === 0;
+
+  // First-run state gets its own moment — not a wall of empty cards.
+  if (isBrandNew) {
+    return (
+      <div className="mx-auto max-w-[1080px] px-5 lg:px-8 py-10 pb-24 lg:pb-12">
+        <header className="mb-10">
+          <p className="t-caption text-[var(--text-subtle)] mb-3">
+            {format(new Date(), "EEEE, MMM d")}
+          </p>
+          <h1 className="t-greeting">
+            <span className="font-serif italic text-[var(--text-muted)]">{greeting()},</span>{" "}
+            {firstName || "welcome"}.
+          </h1>
+        </header>
+        <EmptyState
+          variant="page"
+          icon={Sparkles}
+          italic="A blank page."
+          title="Let's put your first signing on it."
+          description="Add a signing and your day, your earnings, and your journal entry all start from the same spot. Two minutes and you'll never lose track of a job again."
+          action={
+            <Link href="/appointments">
+              <Button size="md">
+                <Plus size={14} strokeWidth={2} />
+                Add your first signing
+              </Button>
+            </Link>
+          }
+          secondary={
+            <Link href="/pipeline" className="hover:text-[var(--text)] transition-colors">
+              or add a title company you want to work with →
+            </Link>
+          }
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-[1280px] px-5 lg:px-8 py-8 pb-24 lg:pb-12">
-      <header className="mb-10">
-        <p className="t-caption text-[var(--text-subtle)] mb-2">
+      <header className="mb-8">
+        <p className="t-caption text-[var(--text-subtle)] mb-3">
           {format(new Date(), "EEEE, MMM d")}
         </p>
-        <h1 className="t-h1">
-          {greeting()}{firstName ? `, ${firstName}` : ""}.
+        <h1 className="t-greeting">
+          <span className="font-serif italic text-[var(--text-muted)]">{greeting()},</span>{" "}
+          {firstName ? `${firstName}.` : "there."}
         </h1>
-        <p className="t-body text-[var(--text-muted)] mt-2 max-w-[60ch]">
-          {today.length === 0
-            ? "Nothing on the calendar today. Good day to send a follow-up."
-            : today.length === 1
-            ? "One signing on the calendar today."
-            : `${today.length} signings on the calendar today.`}
+        <p className="t-body text-[var(--text-muted)] mt-3 max-w-[64ch]">
+          {dayLine(today, overdue.length)}
         </p>
       </header>
 
-      <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-        <TodayCard appointments={today} />
-        <StatStack
-          weekCount={summary.weekCount}
+      <div className="grid gap-5 lg:grid-cols-3">
+        {/* HERO: Today */}
+        <div className="lg:col-span-2">
+          <TodayHero appointments={today} />
+        </div>
+
+        {/* PRIMARY METRIC: Earnings */}
+        <EarningsCard
           monthRevenueCents={summary.monthRevenueCents}
-          journalCount={journalCount}
+          daily={daily}
+          mom={mom}
         />
-        <FollowUpsCard contacts={overdue} />
+
+        {/* SECONDARY METRICS */}
+        <Stat
+          eyebrow="This week"
+          value={summary.weekCount}
+          helper={
+            summary.weekCount === 0
+              ? "Nothing booked Sun–Sat."
+              : `${summary.weekCount === 1 ? "signing" : "signings"} Sun–Sat.`
+          }
+          icon={CalendarDays}
+          href="/appointments"
+        />
+        <Stat
+          eyebrow="Journal"
+          value={journalCount}
+          helper={
+            journalCount === 0
+              ? "Lock your first entry."
+              : "Locked entries, searchable forever."
+          }
+          icon={BookOpen}
+          href="/journal"
+        />
         <QuickActionsCard />
+
+        {/* FOLLOW-UPS — span 2 on desktop, full width below the metrics */}
+        <div className="lg:col-span-3">
+          <FollowUpsCard contacts={overdue} />
+        </div>
       </div>
     </div>
   );
 }
 
-function TodayCard({ appointments }: { appointments: Appointment[] }) {
+/* ─────────────────────────────────────────────── */
+
+function TodayHero({ appointments }: { appointments: Appointment[] }) {
   return (
-    <section className="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] overflow-hidden">
-      <div className="px-6 py-5 border-b border-[var(--border)] flex items-center justify-between">
-        <div>
-          <p className="t-caption text-[var(--text-subtle)] mb-1">Today</p>
-          <h2 className="t-h3">On the calendar</h2>
-        </div>
-        <Link href="/appointments">
-          <Button size="sm" variant="ghost">
-            All <ArrowRight size={13} strokeWidth={1.75} />
-          </Button>
-        </Link>
-      </div>
+    <SectionCard
+      tone="hero"
+      eyebrow="Today"
+      title="On the calendar"
+      link={{ href: "/appointments", label: "All signings" }}
+      bodyClassName="px-0 pb-0"
+    >
       {appointments.length === 0 ? (
-        <div className="px-6 py-10 text-center">
-          <CalendarDays size={22} strokeWidth={1.5} className="mx-auto text-[var(--text-subtle)]" />
-          <p className="mt-3 text-sm text-[var(--text)]">No signings today.</p>
-          <p className="mt-1 text-xs text-[var(--text-subtle)]">
-            Add one and the address, fee, and a one-tap nav link land here.
-          </p>
-          <Link href="/appointments" className="inline-block mt-4">
-            <Button size="sm">
-              <Plus size={13} strokeWidth={2} /> Add a signing
-            </Button>
-          </Link>
+        <div className="px-6 pb-8">
+          <EmptyState
+            icon={CalendarDays}
+            title="No signings on the books today."
+            description="Add one and the address, fee, and a one-tap nav link land right here."
+            action={
+              <Link href="/appointments">
+                <Button size="sm">
+                  <Plus size={13} strokeWidth={2} /> Add a signing
+                </Button>
+              </Link>
+            }
+          />
         </div>
       ) : (
-        <ul className="divide-y divide-[var(--border)]">
-          {appointments.map((a) => (
-            <li key={a.id} className="px-6 py-4 flex items-center gap-4">
-              <div className="shrink-0 font-mono text-sm text-[var(--text)] w-[58px] tabular-nums">
-                {format(new Date(a.scheduled_at), "h:mm a").toLowerCase()}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">
-                  {appointmentTitle(a)}
-                </p>
-                <p className="text-xs text-[var(--text-muted)] truncate">
-                  {appointmentLocationLine(a) || "—"}
-                </p>
-              </div>
-              <div className="shrink-0">
-                {a.status === "completed" ? (
-                  <Badge tone="success">Done</Badge>
-                ) : a.fee_cents > 0 ? (
-                  <span className="text-sm font-mono text-[var(--text)]">
-                    {usdCents(a.fee_cents)}
-                  </span>
-                ) : (
-                  <Badge tone="accent">Scheduled</Badge>
+        <ol className="relative">
+          {appointments.map((a, i) => {
+            const when = format(new Date(a.scheduled_at), "h:mm a").toLowerCase();
+            const isLast = i === appointments.length - 1;
+            return (
+              <li
+                key={a.id}
+                className={cn(
+                  "relative px-6 py-4 flex items-center gap-5",
+                  !isLast && "border-b border-[var(--border-soft)]"
                 )}
-              </div>
-            </li>
-          ))}
-        </ul>
+              >
+                {/* timeline rail */}
+                <div className="shrink-0 w-[68px] flex flex-col items-end">
+                  <span className="t-num text-sm text-[var(--text)] font-medium">
+                    {when}
+                  </span>
+                  {a.duration_min ? (
+                    <span className="text-[10px] text-[var(--text-subtle)] mt-0.5">
+                      {a.duration_min}m
+                    </span>
+                  ) : null}
+                </div>
+                <span
+                  className={cn(
+                    "shrink-0 h-2.5 w-2.5 rounded-full",
+                    a.status === "completed"
+                      ? "bg-[var(--success)]"
+                      : "bg-[var(--accent)] ring-4 ring-[color-mix(in_oklab,var(--accent)_18%,transparent)]"
+                  )}
+                  aria-hidden
+                />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-[var(--text)] truncate">
+                    {appointmentTitle(a)}
+                  </p>
+                  <p className="text-xs text-[var(--text-muted)] truncate mt-0.5">
+                    {appointmentLocationLine(a) || "Location TBD"}
+                  </p>
+                </div>
+                <div className="shrink-0">
+                  {a.status === "completed" ? (
+                    <Badge tone="success">Done</Badge>
+                  ) : a.fee_cents > 0 ? (
+                    <span className="t-num text-sm text-[var(--text)] font-medium">
+                      {usdCents(a.fee_cents)}
+                    </span>
+                  ) : (
+                    <Badge tone="accent">Scheduled</Badge>
+                  )}
+                </div>
+              </li>
+            );
+          })}
+        </ol>
       )}
-    </section>
+    </SectionCard>
   );
 }
 
-function StatStack({
-  weekCount,
+/* ─────────────────────────────────────────────── */
+
+function EarningsCard({
   monthRevenueCents,
-  journalCount,
+  daily,
+  mom,
 }: {
-  weekCount: number;
   monthRevenueCents: number;
-  journalCount: number;
+  daily: number[];
+  mom: { thisMonthCents: number; lastMonthCents: number; percent: number | null };
 }) {
-  return (
-    <section className="flex flex-col gap-4">
-      <StatCard
-        eyebrow="This month"
-        label="Earned"
-        value={monthRevenueCents > 0 ? usdCents(monthRevenueCents) : "$0"}
-        icon={<Banknote size={15} strokeWidth={1.75} />}
-        helper={
-          monthRevenueCents > 0
-            ? "Sum of completed signings this month."
-            : "Mark a signing complete to start tracking."
-        }
-        href="/appointments"
-      />
-      <StatCard
-        eyebrow="This week"
-        label={`${weekCount} ${weekCount === 1 ? "signing" : "signings"}`}
-        value={weekCount.toString()}
-        icon={<CalendarDays size={15} strokeWidth={1.75} />}
-        helper="Sunday through Saturday."
-        href="/appointments"
-      />
-      <StatCard
-        eyebrow="Journal"
-        label="Locked entries"
-        value={journalCount.toString()}
-        icon={<BookOpen size={15} strokeWidth={1.75} />}
-        helper="Every signing, permanent, searchable."
-        href="/journal"
-      />
-    </section>
-  );
-}
+  const monthLabel = format(new Date(), "MMM");
+  const hasData = monthRevenueCents > 0 || daily.some((d) => d > 0);
 
-function StatCard({
-  eyebrow,
-  label,
-  value,
-  icon,
-  helper,
-  href,
-}: {
-  eyebrow: string;
-  label: string;
-  value: string;
-  icon: React.ReactNode;
-  helper: string;
-  href: string;
-}) {
   return (
     <Link
-      href={href}
-      className="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] p-5 flex items-start gap-4 transition-colors hover:bg-[var(--surface-2)]"
+      href="/appointments"
+      className="group block rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] shadow-[var(--shadow-sm)] overflow-hidden transition-colors hover:border-[var(--border-strong)]"
     >
-      <span className="h-10 w-10 rounded-[10px] bg-[var(--accent-soft)] text-[var(--accent)] inline-flex items-center justify-center shrink-0">
-        {icon}
-      </span>
-      <div className="flex-1 min-w-0">
-        <p className="t-caption text-[var(--text-subtle)]">{eyebrow}</p>
-        <p className="t-h3 mt-1 leading-none">{value}</p>
-        <p className="text-xs text-[var(--text-muted)] mt-2">{helper}</p>
+      <div className="p-5 pb-3 flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="t-caption text-[var(--text-subtle)]">{monthLabel} earnings</p>
+          <p className="t-num-display text-[var(--text)] mt-2">
+            {hasData ? usdCents(monthRevenueCents) : "$0"}
+          </p>
+        </div>
+        <span
+          className="h-9 w-9 rounded-[var(--radius)] inline-flex items-center justify-center bg-[var(--accent-soft)] text-[var(--accent)] shrink-0"
+          aria-hidden
+        >
+          <Banknote size={15} strokeWidth={1.5} />
+        </span>
       </div>
-      <span className="text-[var(--text-subtle)] mt-1.5">
-        <ArrowRight size={14} strokeWidth={1.75} />
-      </span>
-      <span className="sr-only">{label}</span>
+
+      <div className="px-5 pb-2">
+        <Sparkline data={daily} height={48} className="w-full" />
+      </div>
+
+      <div className="px-5 pb-5 pt-1 flex items-center justify-between gap-3">
+        <p className="text-xs text-[var(--text-subtle)]">
+          {hasData ? "Last 30 days" : "Mark a signing complete to track it"}
+        </p>
+        {mom.percent !== null ? (
+          <span
+            className={cn(
+              "inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--radius-sm)] text-[11px] font-medium t-num",
+              mom.percent > 0 &&
+                "text-[var(--success)] bg-[color-mix(in_oklab,var(--success)_14%,transparent)]",
+              mom.percent < 0 &&
+                "text-[var(--danger)] bg-[color-mix(in_oklab,var(--danger)_14%,transparent)]",
+              mom.percent === 0 && "text-[var(--text-subtle)] bg-[var(--surface-2)]"
+            )}
+          >
+            {mom.percent > 0 ? "+" : ""}
+            {mom.percent}% vs last
+          </span>
+        ) : null}
+      </div>
     </Link>
   );
 }
 
+/* ─────────────────────────────────────────────── */
+
+const SEVERITY_DOT: Record<OverdueSeverity, string> = {
+  calm: "bg-[var(--text-subtle)]",
+  warn: "bg-[var(--warning)]",
+  hot: "bg-[var(--danger)] ring-4 ring-[color-mix(in_oklab,var(--danger)_18%,transparent)]",
+};
+
+const SEVERITY_LABEL: Record<OverdueSeverity, string> = {
+  calm: "On track",
+  warn: "Getting cold",
+  hot: "At risk",
+};
+
 function FollowUpsCard({ contacts }: { contacts: Contact[] }) {
   return (
-    <section className="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] overflow-hidden">
-      <div className="px-6 py-5 border-b border-[var(--border)] flex items-center justify-between">
-        <div>
-          <p className="t-caption text-[var(--text-subtle)] mb-1">Pipeline</p>
-          <h2 className="t-h3">Who to follow up with</h2>
-        </div>
-        <Link href="/pipeline">
-          <Button size="sm" variant="ghost">
-            All <ArrowRight size={13} strokeWidth={1.75} />
-          </Button>
-        </Link>
-      </div>
+    <SectionCard
+      eyebrow="Pipeline"
+      title="Who to follow up with"
+      link={{ href: "/pipeline", label: "All contacts" }}
+      bodyClassName="px-0 pb-0"
+    >
       {contacts.length === 0 ? (
-        <div className="px-6 py-10 text-center">
-          <KanbanSquare size={22} strokeWidth={1.5} className="mx-auto text-[var(--text-subtle)]" />
-          <p className="mt-3 text-sm text-[var(--text)]">Nobody&apos;s overdue.</p>
-          <p className="mt-1 text-xs text-[var(--text-subtle)]">
-            Add a title company you&apos;d like to work with — we&apos;ll remind you to follow up.
-          </p>
+        <div className="px-6 pb-8">
+          <EmptyState
+            icon={KanbanSquare}
+            title="Nobody's overdue right now."
+            description="When a contact goes cold past its stage window, they'll show up here so you can hit reply before they forget you exist."
+            action={
+              <Link href="/pipeline">
+                <Button size="sm" variant="ghost">
+                  <Plus size={13} strokeWidth={2} /> Add a contact
+                </Button>
+              </Link>
+            }
+          />
         </div>
       ) : (
-        <ul className="divide-y divide-[var(--border)]">
+        <ul className="divide-y divide-[var(--border-soft)]">
           {contacts.map((c) => {
             const days = daysSince(c.last_contacted_at);
+            const sev = overdueSeverity(c);
             return (
               <li key={c.id}>
                 <Link
                   href={`/pipeline/${c.id}`}
-                  className="px-6 py-4 flex items-center gap-3 hover:bg-[var(--surface-2)] transition-colors"
+                  className="px-6 py-4 flex items-center gap-4 hover:bg-[var(--surface-2)] transition-colors"
                 >
+                  <span
+                    className={cn("shrink-0 h-2.5 w-2.5 rounded-full", SEVERITY_DOT[sev])}
+                    aria-label={SEVERITY_LABEL[sev]}
+                  />
                   <span className="shrink-0 h-9 w-9 rounded-[10px] bg-[var(--accent-soft)] text-[var(--accent)] inline-flex items-center justify-center">
-                    <Building2 size={14} strokeWidth={1.75} />
+                    <Building2 size={14} strokeWidth={1.5} />
                   </span>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-[var(--text)] truncate">
                       {c.company_name}
                     </p>
-                    <p className="text-xs text-[var(--text-subtle)] inline-flex items-center gap-1">
-                      <Clock size={11} strokeWidth={1.75} />
-                      {days === null ? "Never contacted" : `${days}d since last touch`}
+                    <p className="text-xs text-[var(--text-subtle)] truncate mt-0.5">
+                      {days === null
+                        ? "Never contacted"
+                        : `${days}d since last touch · ${SEVERITY_LABEL[sev]}`}
                     </p>
                   </div>
-                  <span className="text-[var(--text-subtle)]">
-                    <ArrowRight size={14} strokeWidth={1.75} />
+                  <span className="text-[var(--text-subtle)] group-hover:text-[var(--text-muted)]">
+                    <ArrowRight size={14} strokeWidth={1.5} />
                   </span>
                 </Link>
               </li>
@@ -274,30 +430,39 @@ function FollowUpsCard({ contacts }: { contacts: Contact[] }) {
           })}
         </ul>
       )}
-    </section>
+    </SectionCard>
   );
 }
+
+/* ─────────────────────────────────────────────── */
 
 function QuickActionsCard() {
   const actions = [
     { href: "/appointments", icon: CalendarDays, label: "New signing" },
-    { href: "/journal/new",   icon: BookOpen,    label: "New journal entry" },
-    { href: "/pipeline",      icon: KanbanSquare, label: "Add a contact" },
+    { href: "/journal/new", icon: BookOpen, label: "New journal entry" },
+    { href: "/pipeline", icon: KanbanSquare, label: "Add a contact" },
   ];
   return (
-    <section className="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] p-5">
-      <p className="t-caption text-[var(--text-subtle)] mb-1">Quick add</p>
-      <h2 className="t-h3 mb-4">Get something done</h2>
-      <ul className="flex flex-col gap-2">
+    <section className="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] p-5 flex flex-col">
+      <p className="t-caption text-[var(--text-subtle)] mb-4">Quick add</p>
+      <ul className="flex flex-col gap-2 mt-auto">
         {actions.map((a) => (
           <li key={a.href}>
             <Link
               href={a.href}
-              className="flex items-center gap-3 px-3 h-11 rounded-[var(--radius)] border border-[var(--border)] bg-[var(--bg)] hover:border-[var(--accent)] transition-colors"
+              className="group flex items-center gap-3 px-3 h-10 rounded-[var(--radius)] border border-[var(--border-soft)] bg-[var(--bg)] hover:border-[var(--accent)] hover:bg-[var(--surface-2)] transition-colors"
             >
-              <a.icon size={14} strokeWidth={1.75} className="text-[var(--accent)]" />
-              <span className="text-sm text-[var(--text)]">{a.label}</span>
-              <ArrowRight size={13} strokeWidth={1.75} className="text-[var(--text-subtle)] ml-auto" />
+              <a.icon
+                size={14}
+                strokeWidth={1.5}
+                className="text-[var(--accent)] shrink-0"
+              />
+              <span className="text-sm text-[var(--text)] truncate">{a.label}</span>
+              <ArrowRight
+                size={13}
+                strokeWidth={1.5}
+                className="text-[var(--text-subtle)] ml-auto group-hover:text-[var(--text-muted)] group-hover:translate-x-0.5 transition-all"
+              />
             </Link>
           </li>
         ))}

@@ -40,7 +40,7 @@ export function KanbanColumn({
           className="h-7 w-7 rounded-[6px] inline-flex items-center justify-center text-[var(--text-subtle)] hover:text-[var(--text)] hover:bg-[var(--surface)]"
           aria-label={`Add to ${label}`}
         >
-          <Plus size={14} strokeWidth={1.75} />
+          <Plus size={14} strokeWidth={1.5} />
         </button>
       </div>
       <div

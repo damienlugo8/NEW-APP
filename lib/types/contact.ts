@@ -78,3 +78,44 @@ export function isOverdue(contact: Pick<Contact, "stage" | "last_contacted_at" |
   if (contact.stage === "active_client") return days >= 60;
   return false;
 }
+
+/**
+ * Classify how urgently a contact needs a touch. Powers the colored dot
+ * on dashboard follow-up rows so a notary can scan the list and triage
+ * without reading every word.
+ *
+ *   - "calm":   not overdue (or just barely)
+ *   - "warn":   1× stage window past — they're starting to forget you
+ *   - "hot":    2× stage window past — the relationship is at risk
+ */
+export type OverdueSeverity = "calm" | "warn" | "hot";
+
+export function overdueSeverity(
+  contact: Pick<Contact, "stage" | "last_contacted_at" | "next_followup_at">
+): OverdueSeverity {
+  // Explicit follow-up date: hot when >7d past, warn when past, else calm.
+  if (contact.next_followup_at) {
+    const due = new Date(contact.next_followup_at).getTime();
+    const overdueDays = (Date.now() - due) / 86_400_000;
+    if (overdueDays >= 7) return "hot";
+    if (overdueDays > 0) return "warn";
+    return "calm";
+  }
+
+  const days = daysSince(contact.last_contacted_at);
+  if (days === null) {
+    // Never contacted — prospects are warm-but-not-burning.
+    return contact.stage === "prospect" ? "warn" : "calm";
+  }
+
+  // Stage-window-based escalation.
+  const window =
+    contact.stage === "following_up" ? 7 :
+    contact.stage === "contacted"    ? 14 :
+    contact.stage === "active_client" ? 60 :
+    Infinity;
+
+  if (days >= window * 2) return "hot";
+  if (days >= window)     return "warn";
+  return "calm";
+}

@@ -20,7 +20,7 @@ export default async function NewJournalEntryPage({
         href="/journal"
         className="inline-flex items-center gap-1.5 text-sm text-[var(--text-muted)] hover:text-[var(--text)] transition-colors mb-6"
       >
-        <ArrowLeft size={14} strokeWidth={1.75} /> Journal
+        <ArrowLeft size={14} strokeWidth={1.5} /> Journal
       </Link>
 
       <div className="mb-8">
