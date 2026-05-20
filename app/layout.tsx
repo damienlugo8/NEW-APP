@@ -1,8 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
+import { Geist, Geist_Mono, Bodoni_Moda } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider, themeBootstrap } from "@/components/theme-provider";
 
+/**
+ * Type system (FORGE):
+ *   - Geist Sans   — UI everything. Same as before; the chassis didn't break.
+ *   - Geist Mono   — numerals everywhere. Streak, macros, day count, timers.
+ *                    Loaded with `tnum` so columns of numbers line up.
+ *   - Bodoni Moda  — editorial display. Landing hero, Day-N greeting on /daily,
+ *                    Day 75 Receipt. *Never* in UI chrome. Italic accent is
+ *                    the whole reason we picked a modern serif — it's the
+ *                    "softness inside the steel" beat the brand needs.
+ */
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -15,40 +25,48 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-// Editorial display face — used only on the landing page for hero + section h1.
-// Style "normal" (400) is what gives it that Tiempos / Söhne-serif feel.
-const instrumentSerif = Instrument_Serif({
-  variable: "--font-instrument-serif",
+const bodoni = Bodoni_Moda({
+  variable: "--font-display-serif",
   subsets: ["latin"],
-  weight: "400",
+  weight: ["400", "500", "600"],
   style: ["normal", "italic"],
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://notaryflow.app"),
+  metadataBase: new URL("https://forge.app"),
   title: {
-    default: "NotaryFlow — Your notary business in one app.",
-    template: "%s · NotaryFlow",
+    default: "FORGE — Forge yourself. Daily.",
+    template: "%s · FORGE",
   },
   description:
-    "The journal, the calendar, the invoices, the title companies you're chasing — finally in one place. Built for the phone in your hand.",
-  keywords: ["notary", "loan signing agent", "notary CRM", "signing agent software", "notary journal"],
+    "The operating system for discipline. Daily habits, Hard 75, fuel tracking, and a five-man squad — built for men who are done being soft.",
+  keywords: [
+    "75 hard",
+    "hard 75",
+    "discipline app",
+    "habit tracker",
+    "mental toughness",
+    "monk mode",
+    "self improvement for men",
+  ],
   openGraph: {
-    title: "NotaryFlow",
+    title: "FORGE",
     description:
-      "Run the entire signing business from your phone. The only notary tool with a real sales pipeline.",
+      "Forge yourself. Daily. The operating system for discipline.",
     type: "website",
     url: "/",
   },
-  twitter: { card: "summary_large_image", title: "NotaryFlow" },
+  twitter: { card: "summary_large_image", title: "FORGE" },
   icons: { icon: "/favicon.ico" },
 };
 
 export const viewport: Viewport = {
+  // Dark is the brand. Light is preserved as an opt-in under Settings →
+  // Appearance, but the chrome assumes dark and looks correct there.
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#FAFAF7" },
-    { media: "(prefers-color-scheme: dark)",  color: "#0B0F0C" },
+    { media: "(prefers-color-scheme: light)", color: "#F5F4F0" },
+    { media: "(prefers-color-scheme: dark)",  color: "#0A0A0A" },
   ],
   width: "device-width",
   initialScale: 1,
@@ -58,7 +76,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${bodoni.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { ProfileForm } from "./profile-form";
 import { PageHeader } from "@/components/app/page-header";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { getProfile } from "@/lib/auth/session";
 
 export const metadata = { title: "Settings" };
@@ -13,12 +14,24 @@ export default async function SettingsPage() {
       <PageHeader
         eyebrow="Settings"
         title="Profile"
-        supporting="The details that appear on your invoices and journal entries. Update once — they apply everywhere."
+        supporting="The details FORGE uses for your daily plan and squad handle. Update once — they apply everywhere."
       />
 
       <ProfileForm profile={profile} />
 
-      <div className="mt-14 rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] p-5 flex items-center justify-between gap-4">
+      {/* Appearance — moved here from the topbar so the chrome stays
+          single-purpose. Most users pick a theme once and never touch it. */}
+      <section className="mt-14 rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] p-5 flex items-start sm:items-center justify-between flex-col sm:flex-row gap-4">
+        <div className="min-w-0">
+          <p className="t-caption text-[var(--text-subtle)] mb-1">Appearance</p>
+          <p className="text-sm text-[var(--text)]">
+            FORGE is dark by default. Light mode is here if you need it.
+          </p>
+        </div>
+        <ThemeToggle />
+      </section>
+
+      <section className="mt-6 rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] p-5 flex items-center justify-between gap-4">
         <div className="min-w-0">
           <p className="t-caption text-[var(--text-subtle)] mb-1">Billing</p>
           <p className="text-sm text-[var(--text)]">
@@ -32,7 +45,7 @@ export default async function SettingsPage() {
           Manage
           <ArrowUpRight size={13} strokeWidth={1.5} aria-hidden />
         </Link>
-      </div>
+      </section>
     </div>
   );
 }

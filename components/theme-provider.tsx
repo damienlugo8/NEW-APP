@@ -3,7 +3,11 @@
 import * as React from "react";
 
 type Theme = "light" | "dark" | "system";
-const KEY = "nf-theme";
+// FORGE is dark-first. The chrome was designed against the dark palette and
+// reads correctly there; light is preserved as an opt-in under Settings →
+// Appearance. Default = dark (no `system` ambiguity for first-time visitors).
+const KEY = "forge-theme";
+const DEFAULT_THEME: Theme = "dark";
 
 interface Ctx {
   theme: Theme;
@@ -19,11 +23,11 @@ function applyDom(t: "light" | "dark") {
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = React.useState<Theme>("system");
-  const [resolved, setResolved] = React.useState<"light" | "dark">("light");
+  const [theme, setThemeState] = React.useState<Theme>(DEFAULT_THEME);
+  const [resolved, setResolved] = React.useState<"light" | "dark">("dark");
 
   React.useEffect(() => {
-    const stored = (localStorage.getItem(KEY) as Theme | null) ?? "system";
+    const stored = (localStorage.getItem(KEY) as Theme | null) ?? DEFAULT_THEME;
     setThemeState(stored);
   }, []);
 
@@ -61,9 +65,9 @@ export function useTheme() {
 /** Inline script that runs before hydration to prevent FOUC. */
 export const themeBootstrap = `
 (function(){try{
-  var t = localStorage.getItem('${KEY}') || 'system';
+  var t = localStorage.getItem('${KEY}') || '${DEFAULT_THEME}';
   var d = t === 'dark' || (t === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
   if (d) document.documentElement.classList.add('dark');
   document.documentElement.style.colorScheme = d ? 'dark' : 'light';
-}catch(e){}})();
+}catch(e){document.documentElement.classList.add('dark');document.documentElement.style.colorScheme='dark';}})();
 `;

@@ -3,12 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard,
-  CalendarDays,
-  BookOpen,
-  KanbanSquare,
+  Flame,
+  Utensils,
+  ShieldOff,
   Users,
-  Receipt,
+  Anvil,
   Settings,
   type LucideIcon,
 } from "lucide-react";
@@ -18,22 +17,25 @@ import { cn } from "@/lib/utils";
 type Item = { href: string; label: string; icon: LucideIcon; soon?: boolean };
 
 /**
- * Sidebar — desktop only (lg+). Replaced the bordered-pill active state with
- * a left-edge accent rail (Linear/Notion idiom), kept it subtle on hover.
- * Settings sits in its own footer slot, deduplicated from NAV.
+ * Sidebar — desktop only (lg+). Active state is a left-edge ember rail
+ * (Linear/Notion idiom). Hard 75 sits in its own "PROGRAMS" section so it
+ * reads as the wedge offering, not just another tab.
  *
- * Stroke width 1.5 across the board for the hairline iconography pass.
+ * NOTE: routes still resolve to the old notary paths until the per-tab
+ * pages are rebuilt — this is the brand-reading layer landing first.
  */
 const NAV: Item[] = [
-  { href: "/dashboard",    label: "Dashboard",    icon: LayoutDashboard },
-  { href: "/appointments", label: "Appointments", icon: CalendarDays },
-  { href: "/journal",      label: "Journal",      icon: BookOpen },
-  { href: "/pipeline",     label: "Pipeline",     icon: KanbanSquare },
+  { href: "/dashboard",    label: "Daily",   icon: Flame },
+  { href: "/journal",      label: "Fuel",    icon: Utensils },
+  { href: "/pipeline",     label: "Squad",   icon: Users },
+];
+
+const PROGRAMS: Item[] = [
+  { href: "/appointments", label: "Hard 75", icon: Anvil },
 ];
 
 const SOON: Item[] = [
-  { href: "/clients",  label: "Clients",  icon: Users,   soon: true },
-  { href: "/invoices", label: "Invoices", icon: Receipt, soon: true },
+  { href: "/block",    label: "Block",     icon: ShieldOff, soon: true },
 ];
 
 function NavLink({ item, active }: { item: Item; active: boolean }) {
@@ -87,6 +89,13 @@ export function Sidebar() {
 
       <nav className="flex-1 px-2 pt-2 flex flex-col gap-0.5">
         {NAV.map((item) => (
+          <NavLink key={item.href} item={item} active={isActive(item.href)} />
+        ))}
+
+        <div className="mt-6 mb-2 px-3">
+          <p className="t-caption text-[var(--text-subtle)]">Programs</p>
+        </div>
+        {PROGRAMS.map((item) => (
           <NavLink key={item.href} item={item} active={isActive(item.href)} />
         ))}
 

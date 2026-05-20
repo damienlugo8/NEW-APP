@@ -3,7 +3,6 @@
 import * as React from "react";
 import { usePathname } from "next/navigation";
 import { signOutAction } from "@/app/auth/actions";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { LogOut, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -21,11 +20,14 @@ import { cn } from "@/lib/utils";
  *      header (it's never the most useful thing on screen).
  */
 
+// FORGE section labels. Routes still point to the old slugs until the
+// per-tab pages are rebuilt; only what the user reads changes here.
 const SECTION_TITLES: Array<{ match: RegExp; title: string }> = [
-  { match: /^\/dashboard/,    title: "Dashboard" },
-  { match: /^\/appointments/, title: "Appointments" },
-  { match: /^\/journal/,      title: "Journal" },
-  { match: /^\/pipeline/,     title: "Pipeline" },
+  { match: /^\/dashboard/,    title: "Daily" },
+  { match: /^\/appointments/, title: "Hard 75" },
+  { match: /^\/journal/,      title: "Fuel" },
+  { match: /^\/pipeline/,     title: "Squad" },
+  { match: /^\/block/,        title: "Block" },
   { match: /^\/settings/,     title: "Settings" },
   { match: /^\/onboarding/,   title: "Welcome" },
 ];
@@ -77,8 +79,6 @@ export function TopBar({ email }: { email: string }) {
       </div>
 
       <div className="flex items-center gap-2" ref={menuRef}>
-        <ThemeToggle />
-
         <div className="relative">
           <button
             type="button"

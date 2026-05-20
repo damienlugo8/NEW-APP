@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard,
-  CalendarDays,
-  BookOpen,
-  KanbanSquare,
+  Flame,
+  Utensils,
+  Anvil,
+  Users,
   Settings,
   type LucideIcon,
 } from "lucide-react";
@@ -14,23 +14,19 @@ import { cn } from "@/lib/utils";
 
 type Tab = { href: string; label: string; icon: LucideIcon };
 
+/**
+ * Bottom tabs on mobile. Five slots, capped intentionally — BLOCK lives
+ * behind Settings (or under Hard 75 once it exists). The active tab gets
+ * an ember top-edge rail mirroring the desktop sidebar idiom.
+ */
 const TABS: Tab[] = [
-  { href: "/dashboard",    label: "Home",     icon: LayoutDashboard },
-  { href: "/appointments", label: "Calendar", icon: CalendarDays },
-  { href: "/journal",      label: "Journal",  icon: BookOpen },
-  { href: "/pipeline",     label: "Pipeline", icon: KanbanSquare },
+  { href: "/dashboard",    label: "Daily",    icon: Flame },
+  { href: "/journal",      label: "Fuel",     icon: Utensils },
+  { href: "/appointments", label: "Hard 75",  icon: Anvil },
+  { href: "/pipeline",     label: "Squad",    icon: Users },
   { href: "/settings",     label: "Settings", icon: Settings },
 ];
 
-/**
- * Mobile-only bottom tab bar (visible below lg). The active tab gets a
- * top-edge accent rail — a quieter cue than a filled icon, and consistent
- * with the desktop sidebar's left-edge rail. Backdrop-blur sits on a
- * semi-transparent surface so content scrolling under it stays legible.
- *
- * Hidden via print: utility so a printed journal entry doesn't include it.
- * Safe-area inset keeps it above the iOS home indicator.
- */
 export function MobileNav() {
   const path = usePathname();
   return (
@@ -63,14 +59,12 @@ export function MobileNav() {
                     : "text-[var(--text-subtle)] hover:text-[var(--text)]"
                 )}
               >
-                {/* Top-edge accent rail mirrors the desktop sidebar idiom */}
+                {/* Top-edge ember rail mirrors the desktop sidebar */}
                 <span
                   className={cn(
                     "absolute top-0 left-1/2 -translate-x-1/2 h-[2px] w-8 rounded-b-full",
                     "transition-opacity duration-150",
-                    active
-                      ? "bg-[var(--accent)] opacity-100"
-                      : "opacity-0"
+                    active ? "bg-[var(--accent)] opacity-100" : "opacity-0"
                   )}
                   aria-hidden
                 />
