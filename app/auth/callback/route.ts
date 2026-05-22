@@ -3,12 +3,12 @@ import { supabaseServer } from "@/lib/supabase/server";
 
 /**
  * Supabase email-confirmation + recovery callback. Exchanges the code for a
- * session then redirects to `next` (defaults to /dashboard).
+ * session then redirects to `next` (defaults to /daily).
  */
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const code = url.searchParams.get("code");
-  const next = url.searchParams.get("next") ?? "/dashboard";
+  const next = url.searchParams.get("next") ?? "/daily";
 
   if (code) {
     const sb = await supabaseServer();

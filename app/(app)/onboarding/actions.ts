@@ -22,7 +22,7 @@ export async function completeOnboarding(
 ): Promise<OnboardingState> {
   if (!supabaseConfigured) {
     // Demo mode: skip persistence, just go to dashboard.
-    redirect("/dashboard");
+    redirect("/daily");
   }
   const sb = await supabaseServer();
   if (!sb) return { error: "Auth not configured." };
@@ -47,5 +47,5 @@ export async function completeOnboarding(
   });
   if (error) return { error: error.message };
 
-  redirect("/dashboard");
+  redirect("/daily");
 }

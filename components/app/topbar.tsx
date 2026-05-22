@@ -23,6 +23,7 @@ import { cn } from "@/lib/utils";
 // FORGE section labels. Routes still point to the old slugs until the
 // per-tab pages are rebuilt; only what the user reads changes here.
 const SECTION_TITLES: Array<{ match: RegExp; title: string }> = [
+  { match: /^\/daily/,        title: "Daily" },
   { match: /^\/dashboard/,    title: "Daily" },
   { match: /^\/appointments/, title: "Hard 75" },
   { match: /^\/journal/,      title: "Fuel" },
@@ -68,7 +69,8 @@ export function TopBar({ email }: { email: string }) {
   }, [open]);
 
   // Hide title on dashboard — the greeting masthead already names the page.
-  const showTitle = title && !path.startsWith("/dashboard");
+  // The /daily greeting already names the page; hide the redundant title there.
+  const showTitle = title && !path.startsWith("/daily") && !path.startsWith("/dashboard");
 
   return (
     <header className="h-16 border-b border-[var(--border)] bg-[var(--bg)] flex items-center justify-between px-5 lg:px-8">

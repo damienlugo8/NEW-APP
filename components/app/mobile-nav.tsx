@@ -20,7 +20,7 @@ type Tab = { href: string; label: string; icon: LucideIcon };
  * an ember top-edge rail mirroring the desktop sidebar idiom.
  */
 const TABS: Tab[] = [
-  { href: "/dashboard",    label: "Daily",    icon: Flame },
+  { href: "/daily",        label: "Daily",    icon: Flame },
   { href: "/journal",      label: "Fuel",     icon: Utensils },
   { href: "/appointments", label: "Hard 75",  icon: Anvil },
   { href: "/pipeline",     label: "Squad",    icon: Users },
@@ -44,7 +44,7 @@ export function MobileNav() {
         {TABS.map((t) => {
           const active =
             path === t.href ||
-            (t.href !== "/dashboard" && path.startsWith(t.href));
+            (t.href !== "/daily" && path.startsWith(t.href));
           const Icon = t.icon;
           return (
             <li key={t.href} className="flex">

@@ -37,7 +37,7 @@ export async function loginAction(_: AuthState, formData: FormData): Promise<Aut
   const { error } = await sb.auth.signInWithPassword({ email, password });
   if (error) return { error: "Email or password is incorrect." };
   revalidatePath("/", "layout");
-  redirect("/dashboard");
+  redirect("/daily");
 }
 
 export async function forgotPasswordAction(_: AuthState, formData: FormData): Promise<AuthState> {

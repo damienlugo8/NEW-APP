@@ -25,7 +25,7 @@ type Item = { href: string; label: string; icon: LucideIcon; soon?: boolean };
  * pages are rebuilt — this is the brand-reading layer landing first.
  */
 const NAV: Item[] = [
-  { href: "/dashboard",    label: "Daily",   icon: Flame },
+  { href: "/daily",        label: "Daily",   icon: Flame },
   { href: "/journal",      label: "Fuel",    icon: Utensils },
   { href: "/pipeline",     label: "Squad",   icon: Users },
 ];
@@ -84,7 +84,7 @@ export function Sidebar() {
   return (
     <aside className="hidden lg:flex flex-col w-[240px] shrink-0 border-r border-[var(--border)] bg-[var(--surface-2)]">
       <div className="px-5 h-16 flex items-center">
-        <Link href="/dashboard" className="text-[var(--text)]"><Logo /></Link>
+        <Link href="/daily" className="text-[var(--text)]"><Logo /></Link>
       </div>
 
       <nav className="flex-1 px-2 pt-2 flex flex-col gap-0.5">

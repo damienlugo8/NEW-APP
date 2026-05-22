@@ -54,7 +54,7 @@ export function ProGate({
             <Link href="/settings/billing">
               <Button size="sm">Upgrade to Pro</Button>
             </Link>
-            <Link href="/dashboard">
+            <Link href="/daily">
               <Button size="sm" variant="ghost">
                 Maybe later
               </Button>
