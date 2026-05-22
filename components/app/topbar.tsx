@@ -25,6 +25,7 @@ import { cn } from "@/lib/utils";
 const SECTION_TITLES: Array<{ match: RegExp; title: string }> = [
   { match: /^\/daily/,        title: "Daily" },
   { match: /^\/dashboard/,    title: "Daily" },
+  { match: /^\/hard-75/,      title: "Hard 75" },
   { match: /^\/appointments/, title: "Hard 75" },
   { match: /^\/journal/,      title: "Fuel" },
   { match: /^\/pipeline/,     title: "Squad" },

@@ -155,6 +155,22 @@ export const programEnrollments = pgTable("program_enrollments", {
 });
 
 // ─────────────────────────────────────────────────────────────────────────
+// program_task_logs — Hard 75 (and any future program) per-task per-day log
+// ─────────────────────────────────────────────────────────────────────────
+export const programTaskLogs = pgTable(
+  "program_task_logs",
+  {
+    id:            uuid("id").primaryKey().defaultRandom(),
+    userId:        uuid("user_id").notNull(),
+    enrollmentId:  uuid("enrollment_id").notNull(),
+    taskKey:       text("task_key").notNull(),
+    logDate:       date("log_date").notNull(),
+    createdAt:     timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [unique("ptl_enrollment_task_date_unique").on(t.enrollmentId, t.taskKey, t.logDate)]
+);
+
+// ─────────────────────────────────────────────────────────────────────────
 // meal_logs — append-only FUEL log
 // ─────────────────────────────────────────────────────────────────────────
 export const mealLogs = pgTable("meal_logs", {

@@ -31,7 +31,7 @@ const NAV: Item[] = [
 ];
 
 const PROGRAMS: Item[] = [
-  { href: "/appointments", label: "Hard 75", icon: Anvil },
+  { href: "/hard-75", label: "Hard 75", icon: Anvil },
 ];
 
 const SOON: Item[] = [

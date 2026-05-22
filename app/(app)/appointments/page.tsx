@@ -1,12 +1,10 @@
-import { listAppointments } from "@/lib/db/queries/appointments";
-import { AppointmentsPageClient } from "@/components/app/appointments-page-client";
+import { redirect } from "next/navigation";
 
-export const metadata = { title: "Appointments" };
-
-// Always run on the server — appointments are user-scoped and we want fresh data.
-export const dynamic = "force-dynamic";
-
-export default async function AppointmentsPage() {
-  const appointments = await listAppointments();
-  return <AppointmentsPageClient appointments={appointments} />;
+/**
+ * Post-pivot orphan. The underlying `appointments` table no longer exists
+ * after 0003_pivot.sql; this route now lives as Hard 75. Old bookmarks
+ * land on the new home.
+ */
+export default function AppointmentsRedirect() {
+  redirect("/hard-75");
 }
