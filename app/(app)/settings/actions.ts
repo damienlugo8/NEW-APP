@@ -115,16 +115,16 @@ export async function startProCheckout(): Promise<{ url?: string; error?: string
   const { data: u } = await sb.auth.getUser();
   if (!u.user) return { error: "Not signed in." };
 
-  const { data: sub } = await sb
-    .from("subscriptions")
+  const { data: p } = await sb
+    .from("profiles")
     .select("stripe_customer_id")
-    .eq("user_id", u.user.id)
+    .eq("id", u.user.id)
     .maybeSingle();
 
   const url = await createProCheckoutSession({
     userId: u.user.id,
     email: u.user.email ?? "",
-    customerId: sub?.stripe_customer_id ?? null,
+    customerId: p?.stripe_customer_id ?? null,
   });
   if (!url) return { error: "Billing isn't connected yet. Try again later." };
   return { url };
@@ -137,34 +137,18 @@ export async function openBillingPortal(): Promise<{ url?: string; error?: strin
   const { data: u } = await sb.auth.getUser();
   if (!u.user) return { error: "Not signed in." };
 
-  const { data: sub } = await sb
-    .from("subscriptions")
+  const { data: p } = await sb
+    .from("profiles")
     .select("stripe_customer_id")
-    .eq("user_id", u.user.id)
+    .eq("id", u.user.id)
     .maybeSingle();
 
-  if (!sub?.stripe_customer_id) {
+  if (!p?.stripe_customer_id) {
     return { error: "No billing account found." };
   }
-  const url = await createBillingPortalSession(sub.stripe_customer_id);
+  const url = await createBillingPortalSession(p.stripe_customer_id);
   if (!url) return { error: "Billing portal is unavailable right now." };
   return { url };
-}
-
-// Kept for the standalone /settings/billing page's CancelButton.
-export async function cancelSubscriptionAction(): Promise<ProfileState> {
-  if (!supabaseConfigured) return { error: "Supabase not configured." };
-  const sb = await supabaseServer();
-  if (!sb) return { error: "Supabase not configured." };
-  const { data: u } = await sb.auth.getUser();
-  if (!u.user) return { error: "Not signed in." };
-  const { error } = await sb
-    .from("subscriptions")
-    .update({ cancel_at_period_end: true, updated_at: new Date().toISOString() })
-    .eq("user_id", u.user.id);
-  if (error) return { error: error.message };
-  revalidatePath("/settings/billing");
-  return { ok: true };
 }
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -203,13 +187,13 @@ export async function deleteAccount(
 
   // 1. Cancel an active Stripe subscription so we don't keep billing a ghost.
   if (env.stripeSecret) {
-    const { data: sub } = await sb
-      .from("subscriptions")
+    const { data: p } = await sb
+      .from("profiles")
       .select("stripe_subscription_id")
-      .eq("user_id", userId)
+      .eq("id", userId)
       .maybeSingle();
-    if (sub?.stripe_subscription_id) {
-      await cancelSubscriptionNow(sub.stripe_subscription_id);
+    if (p?.stripe_subscription_id) {
+      await cancelSubscriptionNow(p.stripe_subscription_id);
     }
   }
 

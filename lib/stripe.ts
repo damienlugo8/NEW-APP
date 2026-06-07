@@ -29,8 +29,11 @@ export async function createProCheckoutSession(opts: {
   body.set("line_items[0][price]", env.stripePricePro);
   body.set("line_items[0][quantity]", "1");
   body.set("subscription_data[trial_period_days]", "14");
+  // The webhook maps the payment back to a Supabase user via this metadata.
+  // Mirror it onto the subscription so subscription.* events carry it too.
   body.set("client_reference_id", opts.userId);
-  body.set("metadata[user_id]", opts.userId);
+  body.set("metadata[userId]", opts.userId);
+  body.set("subscription_data[metadata][userId]", opts.userId);
   body.set("success_url", `${env.appUrl}/settings?checkout=success`);
   body.set("cancel_url", `${env.appUrl}/settings?checkout=cancelled`);
   if (opts.customerId) body.set("customer", opts.customerId);

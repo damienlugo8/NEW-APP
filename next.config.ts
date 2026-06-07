@@ -21,6 +21,8 @@ const nextConfig: NextConfig = {
       { source: "/appointments", destination: "/daily", permanent: true },
       { source: "/journal", destination: "/daily", permanent: true },
       { source: "/pipeline", destination: "/daily", permanent: true },
+      // Billing is now inline in /settings (Subscription section).
+      { source: "/settings/billing", destination: "/settings", permanent: true },
     ];
   },
 };

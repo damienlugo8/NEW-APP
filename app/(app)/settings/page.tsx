@@ -4,38 +4,23 @@ import { NotificationsSection } from "./notifications-section";
 import { DangerZone } from "./danger-zone";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { getProfile } from "@/lib/auth/session";
-import { supabaseServer } from "@/lib/supabase/server";
-import { supabaseConfigured, stripeConfigured } from "@/lib/env";
+import { stripeConfigured } from "@/lib/env";
 
 export const metadata = { title: "Settings" };
 
-type Sub = {
-  status?: string | null;
-  plan?: string | null;
-  current_period_end?: string | null;
-};
+// Subscription state lives on the profile row (kept current by the Stripe
+// webhook). Status is derived from plan — free / active / lifetime.
+function statusFor(plan: string): string {
+  if (plan === "lifetime") return "lifetime";
+  if (plan === "free") return "free";
+  return "active";
+}
 
 export default async function SettingsPage() {
   const profile = await getProfile();
 
-  let sub: Sub | null = null;
-  if (supabaseConfigured) {
-    const sb = await supabaseServer();
-    if (sb) {
-      const { data: u } = await sb.auth.getUser();
-      if (u.user) {
-        const { data } = await sb
-          .from("subscriptions")
-          .select("status, plan, current_period_end")
-          .eq("user_id", u.user.id)
-          .maybeSingle();
-        sub = data as Sub | null;
-      }
-    }
-  }
-
-  const plan = sub?.plan ?? "free";
-  const status = sub?.status ?? "free";
+  const plan = profile?.plan ?? "free";
+  const status = statusFor(plan);
 
   return (
     <div className="mx-auto max-w-[760px] px-5 lg:px-8 py-10 pb-24 lg:pb-14">
@@ -57,7 +42,7 @@ export default async function SettingsPage() {
         <SubscriptionSection
           plan={plan}
           status={status}
-          currentPeriodEnd={sub?.current_period_end ?? null}
+          currentPeriodEnd={profile?.current_period_end ?? null}
           stripeReady={stripeConfigured}
         />
 

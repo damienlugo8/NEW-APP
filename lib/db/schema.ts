@@ -72,6 +72,11 @@ export const profiles = pgTable("profiles", {
   appleHealthConnected:  boolean("apple_health_connected").default(false).notNull(),
   squadHandle:           text("squad_handle").unique(),
   notificationsPrefs:    jsonb("notifications_prefs"),
+  // Billing — Stripe webhook writes these; profiles is the read source of truth.
+  plan:                  text("plan").default("free").notNull(),
+  stripeCustomerId:      text("stripe_customer_id"),
+  stripeSubscriptionId:  text("stripe_subscription_id"),
+  currentPeriodEnd:      timestamp("current_period_end", { withTimezone: true }),
   onboardedAt:           timestamp("onboarded_at", { withTimezone: true }),
   createdAt:             timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updatedAt:             timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
