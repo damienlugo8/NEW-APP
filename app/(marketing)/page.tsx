@@ -1,17 +1,21 @@
 import { Hero } from "@/components/marketing/hero";
-import { WhySwitch } from "@/components/marketing/why-switch";
-import { Features } from "@/components/marketing/features";
-import { Pricing } from "@/components/marketing/pricing";
-import { FAQ } from "@/components/marketing/faq";
+import { StatsBand } from "@/components/marketing/stats-band";
+import { WhatForgeReplaces } from "@/components/marketing/what-forge-replaces";
+import { Pillars } from "@/components/marketing/pillars";
 
+/**
+ * FORGE marketing landing. Forced-dark, whoop/eight-sleep energy.
+ *
+ * Sections built so far: Hero → Stats band → What FORGE replaces → Five
+ * pillars. Pricing, FAQ, and a rebuilt footer are intentionally not here yet.
+ */
 export default function LandingPage() {
   return (
     <>
       <Hero />
-      <WhySwitch />
-      <Features />
-      <Pricing />
-      <FAQ />
+      <StatsBand />
+      <WhatForgeReplaces />
+      <Pillars />
     </>
   );
 }

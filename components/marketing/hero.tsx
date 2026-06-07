@@ -2,79 +2,113 @@
 
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { ProductMock } from "./product-mock";
+import { ChevronDown } from "lucide-react";
+import { Grain } from "./grain";
+import { EmberParticles } from "./ember-particles";
 
-const ease = [0.22, 1, 0.36, 1] as const;
+const ease = [0.16, 1, 0.3, 1] as const;
 
+/**
+ * SECTION 1 — Hero.
+ * Full-viewport, pure #0A0A0A, grain + slow upward ember particles. Bodoni
+ * headline at display scale, Geist subhead, two CTAs, a pulsing scroll cue.
+ * Forced-dark via hardcoded hex (independent of the app theme toggle).
+ */
 export function Hero() {
   const reduce = useReducedMotion();
-  return (
-    <section className="relative pt-14 md:pt-24 pb-20 md:pb-28">
-      <div className="mx-auto max-w-[1200px] px-6 md:px-10">
-        {/* Eyebrow */}
-        <motion.p
-          initial={{ opacity: 0, y: reduce ? 0 : 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease }}
-          className="t-caption text-[var(--text-subtle)] mb-7 flex items-center gap-2"
-        >
-          <span className="inline-block h-1 w-1 rounded-full bg-[var(--accent)]" />
-          For mobile notaries &amp; loan signing agents
-        </motion.p>
 
-        {/* Headline — Instrument Serif. Italic on the verb-y bit. */}
+  return (
+    <section
+      id="hero"
+      className="relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden bg-[#0A0A0A] px-6 text-center"
+    >
+      <Grain />
+      <EmberParticles />
+
+      {/* faint ember floor-glow */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[40vh]"
+        style={{
+          background:
+            "radial-gradient(60% 100% at 50% 100%, rgba(255,107,26,0.12), transparent 70%)",
+        }}
+      />
+
+      <div className="relative z-10 mx-auto flex max-w-[860px] flex-col items-center pb-16 pt-24">
         <motion.h1
-          initial={{ opacity: 0, y: reduce ? 0 : 12 }}
+          initial={{ opacity: 0, y: reduce ? 0 : 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease, delay: 0.05 }}
-          className="t-display-serif max-w-[22ch]"
+          transition={{ duration: 0.8, ease }}
+          className="text-white"
+          style={{
+            fontFamily: "var(--font-serif)",
+            fontWeight: 500,
+            fontSize: "clamp(3.5rem, 11vw, 6rem)",
+            lineHeight: 1.0,
+            letterSpacing: "-0.03em",
+          }}
         >
-          Your notary business in <em>one</em> app.
+          Forge yourself.
+          <br />
+          Daily.
         </motion.h1>
 
-        {/* Subhead — plain English. */}
         <motion.p
           initial={{ opacity: 0, y: reduce ? 0 : 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease, delay: 0.12 }}
-          className="t-body-lg text-[var(--text-muted)] mt-6 max-w-[58ch]"
+          className="mt-7 max-w-[480px] text-[#A1A1A1]"
+          style={{ fontSize: "1.25rem", lineHeight: 1.5 }}
         >
-          The journal, the calendar, the invoices, the title companies you&apos;re still
-          chasing — finally in one place. Built for the phone in your hand, not the
-          desk you don&apos;t sit at.
+          The discipline app built for men who actually want to change. 75 Hard.
+          Nutrition. No scrolling. Squad accountability. One place.
         </motion.p>
 
-        {/* CTAs */}
         <motion.div
-          initial={{ opacity: 0, y: reduce ? 0 : 8 }}
+          initial={{ opacity: 0, y: reduce ? 0 : 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease, delay: 0.2 }}
-          className="mt-9 flex flex-wrap items-center gap-3"
+          transition={{ duration: 0.6, ease, delay: 0.22 }}
+          className="mt-10 flex flex-col items-center gap-3 sm:flex-row"
         >
-          <Link href="/sign-up">
-            <Button size="lg">Start 14-day free trial</Button>
+          <Link
+            href="/onboarding"
+            className="inline-flex h-12 w-full items-center justify-center rounded-[10px] bg-[#FF6B1A] px-7 text-[15px] font-medium text-[#0A0A0A] transition-[transform,filter] duration-150 hover:brightness-110 active:translate-y-px sm:w-auto"
+          >
+            Start for free
           </Link>
-          <Link href="#features">
-            <Button size="lg" variant="secondary">
-              See how it works
-            </Button>
-          </Link>
-          <span className="font-mono text-xs text-[var(--text-subtle)] ml-1">
-            No credit card. Cancel any time.
-          </span>
-        </motion.div>
-
-        {/* Product mock */}
-        <motion.div
-          initial={{ opacity: 0, y: reduce ? 0 : 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease, delay: 0.35 }}
-          className="mt-16 md:mt-24"
-        >
-          <ProductMock />
+          <a
+            href="#pillars"
+            className="inline-flex h-12 w-full items-center justify-center rounded-[10px] border border-[#2A2A2A] bg-transparent px-7 text-[15px] font-medium text-white transition-colors duration-150 hover:border-[#3A3A3A] hover:bg-white/[0.03] active:translate-y-px sm:w-auto"
+          >
+            See how it works
+          </a>
         </motion.div>
       </div>
+
+      {/* Scroll cue */}
+      <motion.a
+        href="#stats"
+        aria-label="Scroll to learn more"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.6 }}
+        className="absolute inset-x-0 bottom-7 z-10 mx-auto flex w-fit flex-col items-center gap-1.5"
+      >
+        <span
+          className="text-[11px] uppercase tracking-[0.2em] text-[#6B6B6B]"
+          style={{ fontFamily: "var(--font-mono)" }}
+        >
+          scroll
+        </span>
+        <motion.span
+          animate={reduce ? undefined : { y: [0, 5, 0], opacity: [0.5, 1, 0.5] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          className="text-[#FF6B1A]"
+        >
+          <ChevronDown size={18} strokeWidth={2} />
+        </motion.span>
+      </motion.a>
     </section>
   );
 }
