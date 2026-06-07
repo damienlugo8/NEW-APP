@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 import { env } from "@/lib/env";
+import { supabaseServer } from "@/lib/supabase/server";
 
 /**
  * Marketing lead capture — "The FORGE Protocol" PDF.
@@ -27,7 +28,26 @@ export async function captureProtocolLead(
   }
   const to = parsed.data.email;
 
-  // No provider configured (e.g. local/preview) — accept gracefully.
+  // 1. Persist the lead FIRST, so an email failure never loses it. Anon insert
+  //    is allowed by RLS (protocol_leads). Best-effort: a DB hiccup must not
+  //    block the visitor — log and carry on. Duplicate emails hit the unique
+  //    index and error harmlessly; we swallow that too.
+  try {
+    const supabase = await supabaseServer();
+    if (supabase) {
+      const { error } = await supabase
+        .from("protocol_leads")
+        .insert({ email: to, source: "landing-page" });
+      if (error && error.code !== "23505") {
+        // 23505 = unique_violation (already subscribed) — not worth logging loud.
+        console.error("[protocol-lead] DB insert failed:", error.message);
+      }
+    }
+  } catch (err) {
+    console.error("[protocol-lead] DB insert threw:", err);
+  }
+
+  // 2. No provider configured (e.g. local/preview) — lead is saved; accept.
   if (!env.resendKey) return { ok: true };
 
   try {
