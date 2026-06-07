@@ -8,7 +8,13 @@ import { FuelMacroDashboard } from "@/components/app/fuel-macro-dashboard";
 import { FuelWaterTracker } from "@/components/app/fuel-water-tracker";
 import { FuelMealRow } from "@/components/app/fuel-meal-row";
 import { FuelLogMealSheet } from "@/components/app/fuel-log-meal-sheet";
-import { WATER_POUR_OZ, type FuelDayState, type MealInput } from "@/lib/types/fuel";
+import { FuelFridgeScan } from "@/components/app/fuel-fridge-scan";
+import {
+  WATER_POUR_OZ,
+  type FuelDayState,
+  type MealInput,
+  type ScannedMeal,
+} from "@/lib/types/fuel";
 import { logMealAction, pourWaterAction, undoWaterAction } from "./actions";
 
 /**
@@ -25,12 +31,26 @@ import { logMealAction, pourWaterAction, undoWaterAction } from "./actions";
 export function FuelClient({
   state,
   displayName,
+  userId,
 }: {
   state: FuelDayState;
   displayName: string | null;
+  userId: string | null;
 }) {
   const reduce = useReducedMotion();
   const [sheetOpen, setSheetOpen] = React.useState(false);
+  const [, startTransition] = React.useTransition();
+
+  // Optimistic macro totals: a logged meal (from the scan or the sheet) bumps
+  // the bars immediately, then the server revalidate reconciles to truth.
+  const [optimisticTotals, addOptimistic] = React.useOptimistic(
+    state.totals,
+    (cur, d: { proteinG: number; calories: number }) => ({
+      ...cur,
+      proteinG: cur.proteinG + d.proteinG,
+      calories: cur.calories + d.calories,
+    })
+  );
 
   const filledCount = state.water.reduce(
     (a, w) => a + Math.max(1, Math.round(w.oz / WATER_POUR_OZ)),
@@ -40,7 +60,38 @@ export function FuelClient({
   const hasNothing = state.meals.length === 0 && state.water.length === 0;
 
   async function handleSubmit(input: MealInput) {
-    return logMealAction(input);
+    return new Promise<{ ok: boolean; error?: string }>((resolve) => {
+      startTransition(async () => {
+        addOptimistic({
+          proteinG: input.proteinG ?? 0,
+          calories: input.calories ?? 0,
+        });
+        resolve(await logMealAction(input));
+      });
+    });
+  }
+
+  // Logs a scanned meal with an optimistic macro bump, returns the result so
+  // the meal card can dismiss itself only on success.
+  async function handleLogScanned(meal: ScannedMeal) {
+    return new Promise<{ ok: boolean; error?: string }>((resolve) => {
+      startTransition(async () => {
+        addOptimistic({
+          proteinG: meal.macros.protein_g,
+          calories: meal.macros.calories,
+        });
+        resolve(
+          await logMealAction({
+            mealName: meal.name,
+            calories: meal.macros.calories,
+            proteinG: meal.macros.protein_g,
+            carbsG: meal.macros.carbs_g,
+            fatG: meal.macros.fat_g,
+            aiGenerated: true,
+          })
+        );
+      });
+    });
   }
 
   return (
@@ -65,7 +116,17 @@ export function FuelClient({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
       >
-        <FuelMacroDashboard targets={state.targets} totals={state.totals} />
+        <FuelMacroDashboard targets={state.targets} totals={optimisticTotals} />
+      </motion.div>
+
+      {/* Fridge scan — the hero AI moment */}
+      <motion.div
+        className="mt-4"
+        initial={reduce ? false : { opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <FuelFridgeScan userId={userId} onLog={handleLogScanned} />
       </motion.div>
 
       {/* Water tracker */}

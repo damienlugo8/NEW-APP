@@ -63,8 +63,9 @@ export interface MealInput {
   imageUrl?: string | null;
 }
 
-/** Result shape from the Claude vision analyzer. Blunt-mode meal_name is
- *  expected to be terse and judgmental ("Pizza. Bro."). */
+/** Result shape from the Claude single-plate estimator. Blunt-mode meal_name
+ *  is expected to be terse and judgmental ("Pizza. Bro."). Backs the camera
+ *  path of the "Log a meal" sheet. */
 export interface AnalyzedMeal {
   mealName: string;
   calories: number;
@@ -73,6 +74,44 @@ export interface AnalyzedMeal {
   fatG: number;
   verdict: string;         // one-line FORGE response
 }
+
+// ─────────────────────────────────────────────────────────────────────────
+// Fridge-scan meal builder (POST /api/fuel/analyze)
+//
+// The hero AI moment: snap your fridge/ingredients, get back two buildable
+// high-protein meals. JSON keys are snake_case to mirror the model contract
+// exactly (the prompt asks for these literal keys) — no remapping layer.
+// ─────────────────────────────────────────────────────────────────────────
+export interface ScannedMealMacros {
+  calories: number;
+  protein_g: number;
+  carbs_g: number;
+  fat_g: number;
+}
+
+export interface ScannedMeal {
+  name: string;
+  tagline: string;
+  ingredients: string[];
+  steps: string[];
+  macros: ScannedMealMacros;
+  prep_minutes: number;
+}
+
+export interface FridgeScanResult {
+  ingredients_detected: string[];
+  meals: ScannedMeal[];
+}
+
+/** Daily macro targets the scan builds meals against — derived from the
+ *  user's goal + bodyweight, or sane defaults when stats are missing. */
+export interface ScanTargets {
+  calorieTarget: number;
+  proteinTarget: number;
+}
+
+export const DEFAULT_SCAN_CALORIE_TARGET = 2200;
+export const DEFAULT_SCAN_PROTEIN_TARGET = 160;
 
 export function clampPct(part: number, whole: number): number {
   if (whole <= 0) return 0;

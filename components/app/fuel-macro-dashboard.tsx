@@ -1,8 +1,12 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
+import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { clampPct, type MacroTargets } from "@/lib/types/fuel";
+
+const EMBER = "#FF6B1A";
+const DANGER = "#EF4444";
 
 /**
  * FUEL — macro dashboard.
@@ -30,7 +34,10 @@ export function FuelMacroDashboard({ targets, totals }: MacroDashboardProps) {
   const caloriePct = clampPct(totals.calories, targets.calories);
   const waterPct = clampPct(totals.waterOz, targets.waterOz);
 
-  const calorieOver = totals.calories > targets.calories * 1.15;
+  // Protein is a goal you HIT (ember + check). Calories is a ceiling you
+  // BLOW PAST (red the moment you cross target).
+  const proteinHit = totals.proteinG >= targets.proteinG;
+  const calorieOver = totals.calories > targets.calories;
 
   return (
     <section
@@ -45,6 +52,7 @@ export function FuelMacroDashboard({ targets, totals }: MacroDashboardProps) {
         target={targets.proteinG}
         pct={proteinPct}
         hero
+        hit={proteinHit}
         reduce={!!reduce}
       />
 
@@ -80,6 +88,7 @@ function Tile({
   pct,
   hero = false,
   warn = false,
+  hit = false,
   reduce,
 }: {
   label: string;
@@ -89,8 +98,14 @@ function Tile({
   pct: number;
   hero?: boolean;
   warn?: boolean;
+  hit?: boolean;
   reduce: boolean;
 }) {
+  // Bar/number color: red when over a ceiling, ember when a goal is hit,
+  // otherwise the neutral accent fill / default text.
+  const numberColor = warn ? DANGER : hit ? EMBER : undefined;
+  const barColor = warn ? DANGER : hit ? EMBER : "var(--accent)";
+
   return (
     <div
       className={cn(
@@ -100,7 +115,21 @@ function Tile({
       )}
     >
       <div className="flex items-baseline justify-between">
-        <p className="t-caption text-[var(--text-subtle)]">{label}</p>
+        <p className="t-caption text-[var(--text-subtle)] inline-flex items-center gap-1.5">
+          {label}
+          {hit && (
+            <motion.span
+              initial={reduce ? false : { scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="inline-flex h-4 w-4 items-center justify-center rounded-full"
+              style={{ background: EMBER }}
+              aria-label="Target hit"
+            >
+              <Check size={10} strokeWidth={3} color="#fff" />
+            </motion.span>
+          )}
+        </p>
         <p className="text-[11px] font-mono text-[var(--text-subtle)] t-num">
           target {target.toLocaleString()}{unit}
         </p>
@@ -110,8 +139,9 @@ function Tile({
         className={cn(
           "mt-1 flex items-baseline gap-1 font-mono t-num leading-none",
           hero ? "text-[64px] sm:text-[80px]" : "text-[40px] sm:text-[48px]",
-          warn ? "text-[var(--danger,#dc2626)]" : "text-[var(--text)]"
+          numberColor ? "" : "text-[var(--text)]"
         )}
+        style={numberColor ? { color: numberColor } : undefined}
       >
         <span>{value.toLocaleString()}</span>
         <span
@@ -129,10 +159,8 @@ function Tile({
         aria-hidden
       >
         <motion.div
-          className={cn(
-            "h-full rounded-full",
-            warn ? "bg-[var(--danger,#dc2626)]" : "bg-[var(--accent)]"
-          )}
+          className="h-full rounded-full"
+          style={{ background: barColor }}
           initial={reduce ? false : { width: 0 }}
           animate={{ width: `${pct}%` }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}

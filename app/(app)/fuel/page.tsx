@@ -18,5 +18,7 @@ export default async function FuelPage() {
     (profile?.display_name as string | null | undefined) ??
     (profile?.email ? String(profile.email).split("@")[0] : null);
 
-  return <FuelClient state={state} displayName={displayName} />;
+  const userId = (profile?.id as string | null | undefined) ?? null;
+
+  return <FuelClient state={state} displayName={displayName} userId={userId} />;
 }

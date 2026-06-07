@@ -12,7 +12,7 @@ import type { AnalyzedMeal, MealInput } from "@/lib/types/fuel";
  *
  * Two paths:
  *   A) CAMERA — file input (capture=environment on mobile) → POST the
- *      base64 to /api/fuel/analyze → Claude vision returns macros + a
+ *      base64 to /api/fuel/estimate → Claude vision returns macros + a
  *      blunt one-liner verdict. User confirms or edits before saving.
  *   B) MANUAL — five fields (name, kcal, P, C, F) + notes.
  *
@@ -232,7 +232,7 @@ function CameraPane({
     try {
       const dataUrl = await readAsDataURL(f);
       setPreview(dataUrl);
-      const res = await fetch("/api/fuel/analyze", {
+      const res = await fetch("/api/fuel/estimate", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ image: dataUrl }),

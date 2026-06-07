@@ -1,10 +1,12 @@
 "use client";
 
-import { useOptimistic, useTransition } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { useEffect, useOptimistic, useRef, useState, useTransition } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Plus, Undo2, Droplet } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { GALLON_OZ, WATER_POUR_OZ } from "@/lib/types/fuel";
+
+const EMBER = "#FF6B1A";
 
 /**
  * FUEL — water tracker.
@@ -51,8 +53,47 @@ export function FuelWaterTracker({
 
   const goalHit = optimisticCount >= cellCount;
 
+  // Celebrate the moment the gallon line is crossed (not on every render
+  // while already full). The Hard 75 water task auto-completes server-side;
+  // this is the visual payoff. Flash holds for 2s.
+  const [celebrate, setCelebrate] = useState(false);
+  const prevHit = useRef(goalHit);
+  useEffect(() => {
+    if (goalHit && !prevHit.current) {
+      setCelebrate(true);
+      const t = setTimeout(() => setCelebrate(false), 2000);
+      prevHit.current = goalHit;
+      return () => clearTimeout(t);
+    }
+    prevHit.current = goalHit;
+  }, [goalHit]);
+
   return (
-    <div className="rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] px-5 py-4">
+    <motion.div
+      className="relative rounded-[var(--radius)] border bg-[var(--surface)] px-5 py-4"
+      animate={
+        celebrate && !reduce
+          ? { borderColor: [EMBER, "var(--border)"], boxShadow: [`0 0 0 2px ${EMBER}55`, "0 0 0 0px transparent"] }
+          : { borderColor: "var(--border)" }
+      }
+      transition={{ duration: 2, ease: "easeOut" }}
+      style={{ borderColor: "var(--border)" }}
+    >
+      <AnimatePresence>
+        {celebrate && (
+          <motion.div
+            key="gallon-flash"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute -top-2 right-4 z-10 px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wide"
+            style={{ background: EMBER, color: "#fff", fontFamily: "var(--font-mono)" }}
+          >
+            Gallon hit.
+          </motion.div>
+        )}
+      </AnimatePresence>
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <Droplet
@@ -137,6 +178,6 @@ export function FuelWaterTracker({
           Gallon down. Hard 75 water task — auto-logged.
         </p>
       )}
-    </div>
+    </motion.div>
   );
 }
