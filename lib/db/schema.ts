@@ -71,6 +71,7 @@ export const profiles = pgTable("profiles", {
   vices:                 text("vices").array(),
   appleHealthConnected:  boolean("apple_health_connected").default(false).notNull(),
   squadHandle:           text("squad_handle").unique(),
+  notificationsPrefs:    jsonb("notifications_prefs"),
   onboardedAt:           timestamp("onboarded_at", { withTimezone: true }),
   createdAt:             timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updatedAt:             timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),

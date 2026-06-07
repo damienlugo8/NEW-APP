@@ -13,6 +13,16 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+
+  // Legacy notary routes were retired in the FORGE pivot. Anyone hitting an
+  // old bookmark lands on the daily hub instead of a 404.
+  async redirects() {
+    return [
+      { source: "/appointments", destination: "/daily", permanent: true },
+      { source: "/journal", destination: "/daily", permanent: true },
+      { source: "/pipeline", destination: "/daily", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

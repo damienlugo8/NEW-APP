@@ -5,8 +5,11 @@ import { supabaseConfigured, env } from "@/lib/env";
 /**
  * Refreshes the Supabase session cookie on every request so server components
  * always see the latest auth state. Skips when Supabase isn't configured.
+ *
+ * Next 16 renamed the `middleware` file convention to `proxy`; the exported
+ * function is named `proxy` to match.
  */
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   if (!supabaseConfigured) return NextResponse.next();
 
   let res = NextResponse.next({ request: req });
