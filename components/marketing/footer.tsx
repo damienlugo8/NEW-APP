@@ -1,56 +1,50 @@
 import Link from "next/link";
-import { Logo } from "@/components/brand/logo";
+
+/**
+ * SECTION 9 — Footer. Forced-dark #0A0A0A, hairline top border. Wordmark
+ * left, nav center, copyright right. Collapses to a centered stack on mobile.
+ */
+
+const LINKS: { label: string; href: string }[] = [
+  { label: "Privacy", href: "/legal/privacy" },
+  { label: "Terms", href: "/legal/terms" },
+  { label: "Contact", href: "mailto:hello@forge.app" },
+  { label: "Press Kit", href: "/press" },
+];
 
 export function MarketingFooter() {
   return (
-    <footer className="mt-32 border-t border-[var(--border)]">
-      <div className="mx-auto max-w-[1200px] px-6 md:px-10 py-16 grid gap-12 md:grid-cols-[1.5fr_1fr_1fr_1fr]">
-        <div>
-          <Logo />
-          <p className="mt-4 text-sm text-[var(--text-muted)] max-w-[28ch]">
-            The signing business platform built for solo mobile notaries in the United States.
-          </p>
-        </div>
-        <FooterCol title="Product">
-          <FooterLink href="#features">Features</FooterLink>
-          <FooterLink href="#pricing">Pricing</FooterLink>
-          <FooterLink href="#faq">FAQ</FooterLink>
-        </FooterCol>
-        <FooterCol title="Company">
-          <FooterLink href="/legal/privacy">Privacy</FooterLink>
-          <FooterLink href="/legal/terms">Terms</FooterLink>
-          <FooterLink href="mailto:hello@notaryflow.app">Contact</FooterLink>
-        </FooterCol>
-        <FooterCol title="Account">
-          <FooterLink href="/login">Log in</FooterLink>
-          <FooterLink href="/sign-up">Sign up</FooterLink>
-        </FooterCol>
-      </div>
-      <div className="border-t border-[var(--border)]">
-        <div className="mx-auto max-w-[1200px] px-6 md:px-10 py-6 flex flex-col sm:flex-row gap-2 sm:items-center sm:justify-between text-xs text-[var(--text-subtle)]">
-          <span>© {new Date().getFullYear()} NotaryFlow, Inc.</span>
-          <span className="font-mono">v0.1 · foundation</span>
-        </div>
+    <footer className="app-footer border-t border-[#2A2A2A] bg-[#0A0A0A]">
+      <div className="mx-auto flex max-w-[1100px] flex-col items-center gap-6 px-6 py-10 text-center sm:flex-row sm:justify-between sm:gap-4 sm:text-left">
+        {/* Wordmark */}
+        <Link
+          href="/"
+          className="text-[16px] font-semibold uppercase tracking-[0.18em] text-white"
+          style={{ fontFamily: "var(--font-mono)" }}
+        >
+          FORGE
+        </Link>
+
+        {/* Links */}
+        <nav className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[13px] text-[#6B6B6B]">
+          {LINKS.map((l, i) => (
+            <span key={l.href} className="flex items-center gap-2">
+              {i > 0 && <span className="text-[#3A3A3A]">·</span>}
+              <Link
+                href={l.href}
+                className="transition-colors hover:text-[#A1A1A1]"
+              >
+                {l.label}
+              </Link>
+            </span>
+          ))}
+        </nav>
+
+        {/* Copyright */}
+        <p className="text-[13px] text-[#6B6B6B]">
+          © 2026 FORGE. Built for the ones who show up.
+        </p>
       </div>
     </footer>
-  );
-}
-
-function FooterCol({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div>
-      <p className="t-caption text-[var(--text-subtle)] mb-3">{title}</p>
-      <ul className="flex flex-col gap-2 text-sm">{children}</ul>
-    </div>
-  );
-}
-
-function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {
-  return (
-    <li>
-      <Link href={href} className="text-[var(--text-muted)] hover:text-[var(--text)] transition-colors">
-        {children}
-      </Link>
-    </li>
   );
 }
