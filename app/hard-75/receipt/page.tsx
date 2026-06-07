@@ -1,8 +1,13 @@
 import { redirect } from "next/navigation";
 import { getHard75State } from "@/lib/db/queries/hard75";
+import { getEnrollmentPhotos } from "@/lib/db/queries/photos";
 import { getProfile } from "@/lib/auth/session";
 import { supabaseConfigured } from "@/lib/env";
-import { Day75Receipt } from "@/components/app/day-75-receipt";
+import {
+  Day75Receipt,
+  HIGHLIGHT_DAYS,
+  type ReceiptHighlight,
+} from "@/components/app/day-75-receipt";
 import { HARD75_TASKS, type DayCompletion } from "@/lib/types/hard75";
 
 export const metadata = { title: "Day 75 — Receipt" };
@@ -60,6 +65,14 @@ export default async function ReceiptPage() {
     (profile?.display_name as string | null | undefined) ??
     (profile?.email ? String(profile.email).split("@")[0] : null);
 
+  // Highlight reel — Day 1 / 37 / 75 signed URLs (null where missing).
+  const photos = await getEnrollmentPhotos(state.id);
+  const byDay = new Map(photos.map((p) => [p.dayNumber, p.url] as const));
+  const highlights: ReceiptHighlight[] = HIGHLIGHT_DAYS.map((day) => ({
+    day,
+    url: byDay.get(day) ?? null,
+  }));
+
   return (
     <Day75Receipt
       startedAt={state.startedAt}
@@ -67,6 +80,7 @@ export default async function ReceiptPage() {
       hardResets={state.hardResets}
       history={state.history}
       displayName={displayName}
+      highlights={highlights}
     />
   );
 }

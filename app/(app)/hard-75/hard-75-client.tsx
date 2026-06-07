@@ -6,8 +6,10 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Flame, RotateCcw, Trophy } from "lucide-react";
 import { Hard75TaskRow } from "@/components/app/hard75-task-row";
 import { Hard75ProgressRuler } from "@/components/app/hard75-progress-ruler";
+import { Hard75Photos } from "@/components/app/hard75-photos";
 import { HardResetDialog } from "@/components/app/hard-reset-dialog";
 import { Button } from "@/components/ui/button";
+import type { ProgressPhoto } from "@/lib/db/queries/photos";
 import {
   toggleTaskAction,
   hardResetAction,
@@ -39,9 +41,11 @@ import {
 export function Hard75Client({
   state,
   displayName,
+  photos,
 }: {
   state: EnrollmentState;
   displayName: string | null;
+  photos: ProgressPhoto[];
 }) {
   const reduce = useReducedMotion();
   const router = useRouter();
@@ -238,6 +242,13 @@ export function Hard75Client({
           <p className="mt-3 px-2 text-xs text-[var(--danger)]">{errorMsg}</p>
         )}
       </section>
+
+      {/* Progress photos */}
+      <Hard75Photos
+        enrollmentId={state.id}
+        currentDay={state.currentDay}
+        photos={photos}
+      />
 
       {/* Day 75 complete CTA */}
       {canComplete && (

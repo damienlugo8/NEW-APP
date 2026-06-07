@@ -2,6 +2,7 @@ import {
   getHard75State,
   advanceHard75Day,
 } from "@/lib/db/queries/hard75";
+import { getEnrollmentPhotos } from "@/lib/db/queries/photos";
 import { getProfile } from "@/lib/auth/session";
 import { Hard75Client } from "./hard-75-client";
 import { Hard75EmptyState } from "@/components/app/hard75-empty-state";
@@ -44,5 +45,9 @@ export default async function Hard75Page() {
     return <Hard75EmptyState onEnroll={enrollAction} />;
   }
 
-  return <Hard75Client state={state} displayName={displayName} />;
+  const photos = await getEnrollmentPhotos(state.id);
+
+  return (
+    <Hard75Client state={state} displayName={displayName} photos={photos} />
+  );
 }

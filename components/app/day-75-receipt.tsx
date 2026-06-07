@@ -1,13 +1,24 @@
 "use client";
 
+import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
-import { Printer, Share2 } from "lucide-react";
+import { Printer, Share2, Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   HARD75_DURATION,
   HARD75_TASKS,
   type DayCompletion,
 } from "@/lib/types/hard75";
+
+/** A photo highlight for the receipt reel. `url` is a ~1h signed URL or null
+ *  (renders an elegant placeholder). */
+export interface ReceiptHighlight {
+  day: number;
+  url: string | null;
+}
+
+/** The three milestone days the receipt showcases. */
+export const HIGHLIGHT_DAYS = [1, 37, 75] as const;
 
 /**
  * Day 75 Receipt — the artifact.
@@ -38,12 +49,14 @@ export function Day75Receipt({
   hardResets,
   history,
   displayName,
+  highlights = [],
 }: {
   startedAt: string;
   completedAt: string;
   hardResets: number;
   history: DayCompletion[];
   displayName: string | null;
+  highlights?: ReceiptHighlight[];
 }) {
   const reduce = useReducedMotion();
   const totalTasksLogged = history.reduce(
@@ -152,6 +165,9 @@ export function Day75Receipt({
             Forged.
           </p>
 
+          {/* Highlight reel — Day 1 / 37 / 75 */}
+          <HighlightReel highlights={highlights} />
+
           {/* Recipient */}
           {displayName && (
             <>
@@ -235,6 +251,55 @@ export function Day75Receipt({
           </div>
         </motion.div>
       </main>
+    </div>
+  );
+}
+
+function HighlightReel({ highlights }: { highlights: ReceiptHighlight[] }) {
+  const byDay = new Map<number, string | null>();
+  for (const h of highlights) byDay.set(h.day, h.url);
+
+  return (
+    <div className="mb-12">
+      <p className="text-center text-[12px] tracking-[0.24em] uppercase text-white/40 mb-4">
+        The transformation
+      </p>
+      <div className="grid grid-cols-3 gap-3">
+        {HIGHLIGHT_DAYS.map((day) => {
+          const url = byDay.get(day) ?? null;
+          return (
+            <div key={day} className="text-center">
+              <div className="relative aspect-[3/4] overflow-hidden rounded-[10px] border border-white/10 bg-white/[0.04]">
+                {url ? (
+                  <Image
+                    src={url}
+                    alt={`Day ${day} progress photo`}
+                    fill
+                    sizes="(max-width: 640px) 33vw, 200px"
+                    className="object-cover"
+                    unoptimized
+                  />
+                ) : (
+                  <span className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 text-white/25">
+                    <Camera size={18} strokeWidth={1.5} />
+                  </span>
+                )}
+                {/* Foil hairline along the bottom for the framed look */}
+                <span
+                  className="absolute inset-x-0 bottom-0 h-px"
+                  style={{ background: "rgba(212,165,116,0.5)" }}
+                />
+              </div>
+              <p
+                className="mt-2 text-[11px] tracking-[0.18em] uppercase text-white/45"
+                style={{ fontFamily: "var(--font-mono)" }}
+              >
+                Day {day}
+              </p>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
