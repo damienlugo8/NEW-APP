@@ -23,7 +23,7 @@ const TABS: Tab[] = [
   { href: "/daily",        label: "Daily",    icon: Flame },
   { href: "/fuel",         label: "Fuel",     icon: Utensils },
   { href: "/hard-75",      label: "Hard 75",  icon: Anvil },
-  { href: "/pipeline",     label: "Squad",    icon: Users },
+  { href: "/squad",        label: "Squad",    icon: Users },
   { href: "/settings",     label: "Settings", icon: Settings },
 ];
 
