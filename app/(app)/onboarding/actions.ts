@@ -1,51 +1,93 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { z } from "zod";
 import { supabaseServer } from "@/lib/supabase/server";
 import { supabaseConfigured } from "@/lib/env";
+import { joinOrCreateSquad } from "@/lib/db/queries/squad";
+
+/**
+ * Onboarding — FORGE. Persists the wizard payload to profiles and, if the
+ * user opted in, drops them into a squad. The wizard owns all step state
+ * client-side and calls this once at the end with a typed payload (no
+ * FormData parsing — arrays survive cleanly).
+ *
+ * Column map (all landed in 0003_pivot):
+ *   first_name  -> display_name
+ *   goal        -> primary_goal   (enum)
+ *   program     -> starter_program (FK -> programs.key)
+ *   vices       -> vices          (text[])
+ */
 
 const schema = z.object({
-  full_legal_name: z.string().min(2, "Enter your full legal name."),
-  business_name: z.string().optional().nullable(),
-  phone: z.string().min(7, "Enter a valid phone."),
-  commission_state: z.string().length(2, "Use the 2-letter state code."),
-  commission_expires_at: z.string().refine((v) => !Number.isNaN(Date.parse(v)), "Invalid date."),
-  notary_id_number: z.string().min(1, "Enter your notary ID number."),
+  first_name: z.string().trim().min(1, "Tell us your name.").max(40),
+  age: z.number().int().min(13).max(100).nullable(),
+  height_in: z.number().int().min(36).max(96).nullable(),
+  weight_lb: z.number().int().min(60).max(700).nullable(),
+  body_fat_pct: z.number().int().min(2).max(70).nullable(),
+  goal: z.enum(["cut", "bulk", "maintain", "mental"]).nullable(),
+  vices: z.array(
+    z.enum([
+      "phone_scrolling",
+      "porn",
+      "nicotine",
+      "alcohol",
+      "junk_food",
+      "oversleeping",
+      "negative_self_talk",
+    ])
+  ),
+  program: z
+    .enum([
+      "hard_75",
+      "monk_mode_30",
+      "strength_foundations",
+      "no_scroll_september",
+      "forge_custom",
+    ])
+    .nullable(),
+  join_squad: z.boolean(),
 });
 
-export type OnboardingState = { error?: string; fieldErrors?: Record<string, string> };
+export type OnboardingPayload = z.infer<typeof schema>;
 
 export async function completeOnboarding(
-  _: OnboardingState,
-  formData: FormData
-): Promise<OnboardingState> {
+  payload: OnboardingPayload
+): Promise<{ ok: boolean; error?: string }> {
   if (!supabaseConfigured) {
-    // Demo mode: skip persistence, just go to dashboard.
-    redirect("/daily");
+    // Demo mode: nothing to persist; the client routes to /daily.
+    return { ok: true };
   }
-  const sb = await supabaseServer();
-  if (!sb) return { error: "Auth not configured." };
-  const { data: u } = await sb.auth.getUser();
-  if (!u.user) redirect("/login");
 
-  const parsed = schema.safeParse(Object.fromEntries(formData));
+  const parsed = schema.safeParse(payload);
   if (!parsed.success) {
-    const fieldErrors: Record<string, string> = {};
-    for (const issue of parsed.error.issues) {
-      fieldErrors[String(issue.path[0])] = issue.message;
-    }
-    return { fieldErrors };
+    return { ok: false, error: parsed.error.issues[0]?.message ?? "Invalid input." };
   }
+  const data = parsed.data;
+
+  const sb = await supabaseServer();
+  if (!sb) return { ok: false, error: "Auth not configured." };
+  const { data: u } = await sb.auth.getUser();
+  if (!u.user) return { ok: false, error: "Not signed in." };
 
   const { error } = await sb.from("profiles").upsert({
     id: u.user.id,
     email: u.user.email,
-    ...parsed.data,
-    business_name: parsed.data.business_name || null,
+    display_name: data.first_name,
+    age: data.age,
+    height_in: data.height_in,
+    weight_lb: data.weight_lb,
+    body_fat_pct: data.body_fat_pct,
+    primary_goal: data.goal,
+    vices: data.vices,
+    starter_program: data.program,
     onboarded_at: new Date().toISOString(),
   });
-  if (error) return { error: error.message };
+  if (error) return { ok: false, error: error.message };
 
-  redirect("/daily");
+  if (data.join_squad) {
+    // Best-effort — a squad failure shouldn't block finishing onboarding.
+    await joinOrCreateSquad();
+  }
+
+  return { ok: true };
 }
