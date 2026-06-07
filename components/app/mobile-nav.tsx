@@ -21,7 +21,7 @@ type Tab = { href: string; label: string; icon: LucideIcon };
  */
 const TABS: Tab[] = [
   { href: "/daily",        label: "Daily",    icon: Flame },
-  { href: "/journal",      label: "Fuel",     icon: Utensils },
+  { href: "/fuel",         label: "Fuel",     icon: Utensils },
   { href: "/hard-75",      label: "Hard 75",  icon: Anvil },
   { href: "/pipeline",     label: "Squad",    icon: Users },
   { href: "/settings",     label: "Settings", icon: Settings },

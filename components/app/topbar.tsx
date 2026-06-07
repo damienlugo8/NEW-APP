@@ -27,6 +27,7 @@ const SECTION_TITLES: Array<{ match: RegExp; title: string }> = [
   { match: /^\/dashboard/,    title: "Daily" },
   { match: /^\/hard-75/,      title: "Hard 75" },
   { match: /^\/appointments/, title: "Hard 75" },
+  { match: /^\/fuel/,         title: "Fuel" },
   { match: /^\/journal/,      title: "Fuel" },
   { match: /^\/pipeline/,     title: "Squad" },
   { match: /^\/block/,        title: "Block" },

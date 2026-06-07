@@ -23,8 +23,11 @@ export const env = {
 
   resendKey: pick("RESEND_API_KEY"),
 
+  anthropicKey: pick("ANTHROPIC_API_KEY"),
+
   appUrl: pick("NEXT_PUBLIC_APP_URL") ?? "http://localhost:3000",
 } as const;
 
 export const supabaseConfigured = !!(env.supabaseUrl && env.supabaseAnonKey);
 export const stripeConfigured = !!env.stripeSecret;
+export const anthropicConfigured = !!env.anthropicKey;

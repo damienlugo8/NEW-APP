@@ -91,16 +91,20 @@ declare
   task_count int;
   program_duration int;
 begin
-  select e2.*, p.duration_days into e, program_duration
-    from public.program_enrollments e2
-    join public.programs p on p.key = e2.program_key
-   where e2.id = p_enrollment
-     and e2.user_id = auth.uid()
-     and e2.status = 'active'
+  -- Postgres rejects a record + scalar in the same INTO list, so we fetch
+  -- the enrollment row first, then look up the program duration separately.
+  select * into e
+    from public.program_enrollments
+   where id = p_enrollment
+     and user_id = auth.uid()
+     and status = 'active'
    for update;
   if not found then
     raise exception 'enrollment_not_found_or_not_owned';
   end if;
+
+  select duration_days into program_duration
+    from public.programs where key = e.program_key;
 
   -- Server-side verification: today's task count must match.
   select count(*) into task_count

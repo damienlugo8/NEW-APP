@@ -26,7 +26,7 @@ type Item = { href: string; label: string; icon: LucideIcon; soon?: boolean };
  */
 const NAV: Item[] = [
   { href: "/daily",        label: "Daily",   icon: Flame },
-  { href: "/journal",      label: "Fuel",    icon: Utensils },
+  { href: "/fuel",         label: "Fuel",    icon: Utensils },
   { href: "/pipeline",     label: "Squad",   icon: Users },
 ];
 
