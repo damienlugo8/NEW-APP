@@ -60,7 +60,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                 className="flex items-start gap-3 text-[var(--text-muted)]"
               >
                 <span
-                  className="mt-2 h-1 w-1 rounded-full bg-[var(--accent)] shrink-0"
+                  className="mt-2 h-1 w-1 rounded-full bg-[var(--text-subtle)] shrink-0"
                   aria-hidden
                 />
                 {line}
@@ -69,13 +69,16 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           </ul>
         </div>
 
-        <p className="text-[11px] text-[var(--text-subtle)] uppercase tracking-wider t-num-mono relative z-10">
+        <p className="t-caption t-num text-[var(--text-subtle)] relative z-10">
           © {new Date().getFullYear()} NotaryFlow
         </p>
       </aside>
 
       <main className="flex flex-col px-6 sm:px-10 py-10">
-        <Link href="/" className="lg:hidden text-[var(--text)] self-start">
+        <Link
+          href="/"
+          className="lg:hidden text-[var(--text)] self-start inline-flex min-h-11 items-center"
+        >
           <Logo />
         </Link>
         <div className="flex-1 flex items-center justify-center">

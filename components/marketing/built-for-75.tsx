@@ -77,7 +77,7 @@ export function BuiltFor75() {
           {/* Other apps */}
           <div className="rounded-[18px] border border-[#2A2A2A] bg-[#1F1F1F] p-6 sm:p-7">
             <p
-              className="text-[12px] uppercase tracking-[0.14em] text-[#6B6B6B]"
+              className="text-[12px] uppercase tracking-[0.14em] text-[#8B877E]"
               style={{ fontFamily: "var(--font-mono)" }}
             >
               Other apps

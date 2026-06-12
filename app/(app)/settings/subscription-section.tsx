@@ -53,10 +53,7 @@ export function SubscriptionSection({ plan, status, currentPeriodEnd, stripeRead
             {planLabel}
           </p>
         </div>
-        <span
-          className="inline-flex items-center h-6 px-2.5 rounded-full text-[11px] uppercase tracking-[0.08em] border border-[var(--border-strong)] text-[var(--text-muted)]"
-          style={mono}
-        >
+        <span className="t-caption inline-flex items-center h-6 px-2.5 rounded-full border border-[var(--border-strong)] text-[var(--text-muted)]">
           {status}
         </span>
       </div>
@@ -89,7 +86,7 @@ export function SubscriptionSection({ plan, status, currentPeriodEnd, stripeRead
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="t-caption text-[var(--text-subtle)] mb-1">Next billing date</p>
-              <p className="text-[15px] text-[var(--text)]" style={mono}>
+              <p className="text-[15px] text-[var(--text)] t-num" style={mono}>
                 {fmtDate(currentPeriodEnd)}
               </p>
             </div>
@@ -97,7 +94,7 @@ export function SubscriptionSection({ plan, status, currentPeriodEnd, stripeRead
               type="button"
               disabled={pending || !stripeReady}
               onClick={() => go(openBillingPortal)}
-              className="inline-flex items-center gap-1 text-sm text-[var(--text-muted)] hover:text-[var(--text)] underline-offset-4 hover:underline disabled:opacity-50 disabled:no-underline"
+              className="inline-flex items-center gap-1 min-h-11 sm:min-h-0 text-sm text-[var(--text-muted)] hover:text-[var(--text)] underline-offset-4 hover:underline transition-colors duration-200 disabled:opacity-50 disabled:no-underline"
             >
               {pending ? "Opening…" : "Cancel subscription"}
               <ArrowUpRight size={13} strokeWidth={1.5} aria-hidden />

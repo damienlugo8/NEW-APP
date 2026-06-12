@@ -80,15 +80,21 @@ export function SquadClient({
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
         className="mb-6"
       >
-        <p className="t-caption text-[var(--text-subtle)] uppercase tracking-wide">
+        <p className="t-caption text-[var(--text-subtle)]">
           Squad · {squadName}
         </p>
-        <h1 className="font-serif text-[28px] sm:text-[32px] leading-tight text-[var(--text)]">
+        <h1 className="font-semibold tracking-[-0.01em] text-[28px] sm:text-[32px] leading-tight text-[var(--text)] mt-1">
           {displayName ? `Hold the line, ${displayName}.` : "Hold the line."}
         </h1>
 
         {/* Your standing strip */}
-        <div className="mt-4 flex items-center gap-4 rounded-[var(--radius)] border border-[var(--accent)] bg-[var(--accent-soft)] px-4 py-3">
+        <div
+          className="mt-4 flex items-center gap-4 rounded-[var(--radius)] border border-[var(--border)] px-5 py-4 sm:px-6"
+          style={{
+            background:
+              "linear-gradient(90deg, var(--accent-soft) 0%, var(--surface) 60%)",
+          }}
+        >
           <span className="inline-flex items-center justify-center h-10 w-10 rounded-full bg-[color-mix(in_oklab,var(--accent)_22%,transparent)]">
             <Trophy size={18} strokeWidth={1.75} className="text-[var(--accent)]" />
           </span>
@@ -96,7 +102,7 @@ export function SquadClient({
             <p className="text-sm font-medium text-[var(--text)]">
               You&apos;re {you.handle} — {tier}-tier
             </p>
-            <p className="t-caption text-[var(--text-subtle)] mt-0.5">
+            <p className="t-caption t-num text-[var(--text-subtle)] mt-1">
               {you.currentStreak}-day streak · {you.respectPoints} respect
             </p>
           </div>
@@ -121,7 +127,7 @@ export function SquadClient({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
       >
-        <h2 className="text-sm font-medium text-[var(--text-muted)] uppercase tracking-wide mb-3">
+        <h2 className="t-caption text-[var(--text-muted)] mb-3">
           Your squad
         </h2>
         <SquadLeaderboard
@@ -148,7 +154,7 @@ export function SquadClient({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
       >
-        <h2 className="text-sm font-medium text-[var(--text-muted)] uppercase tracking-wide mb-3">
+        <h2 className="t-caption text-[var(--text-muted)] mb-3">
           Global top 10
         </h2>
         <SquadGlobalBoard rows={global} />

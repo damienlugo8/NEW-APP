@@ -102,10 +102,10 @@ export function FuelClient({
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
         className="mb-6"
       >
-        <p className="t-caption text-[var(--text-subtle)] uppercase tracking-wide">
+        <p className="t-caption text-[var(--text-subtle)]">
           Fuel
         </p>
-        <h1 className="font-serif text-[28px] sm:text-[32px] leading-tight text-[var(--text)]">
+        <h1 className="mt-1 font-semibold tracking-[-0.01em] text-[28px] sm:text-[32px] leading-tight text-[var(--text)]">
           {displayName ? `Eat to win, ${displayName}.` : "Eat to win."}
         </h1>
       </motion.header>
@@ -121,7 +121,7 @@ export function FuelClient({
 
       {/* Fridge scan — the hero AI moment */}
       <motion.div
-        className="mt-4"
+        className="mt-6"
         initial={reduce ? false : { opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
@@ -131,7 +131,7 @@ export function FuelClient({
 
       {/* Water tracker */}
       <motion.div
-        className="mt-3"
+        className="mt-6"
         initial={reduce ? false : { opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
@@ -145,10 +145,14 @@ export function FuelClient({
 
       {/* Log a meal — primary action */}
       <div className="mt-6 flex items-center justify-between">
-        <h2 className="text-sm font-medium text-[var(--text-muted)] uppercase tracking-wide">
+        <h2 className="t-caption text-[var(--text-muted)]">
           Meals today
         </h2>
-        <Button onClick={() => setSheetOpen(true)} size="sm">
+        <Button
+          onClick={() => setSheetOpen(true)}
+          size="sm"
+          className="h-11 sm:h-9 active:scale-[0.97]"
+        >
           <Plus size={14} strokeWidth={2} />
           Log a meal
         </Button>
@@ -185,14 +189,14 @@ export function FuelClient({
 function EmptyState({ onLog }: { onLog: () => void }) {
   return (
     <div className="rounded-[var(--radius)] border border-dashed border-[var(--border)] px-6 py-8 text-center">
-      <p className="font-serif text-[20px] text-[var(--text)] leading-snug">
+      <p className="font-semibold tracking-[-0.01em] text-[20px] text-[var(--text)] leading-snug">
         You haven't eaten yet.
       </p>
-      <p className="mt-2 text-sm text-[var(--text-subtle)] max-w-[40ch] mx-auto">
+      <p className="mt-2 text-sm text-[var(--text-muted)] max-w-[40ch] mx-auto">
         That's either discipline or a problem. Log your first meal.
       </p>
       <div className="mt-4">
-        <Button onClick={onLog}>
+        <Button onClick={onLog} className="active:scale-[0.97]">
           <Plus size={14} strokeWidth={2} />
           Log a meal
         </Button>

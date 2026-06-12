@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { motion, useReducedMotion } from "framer-motion";
 import { Card } from "./profile-section";
 import { Button } from "@/components/ui/button";
 import { deleteAccount } from "./actions";
@@ -13,11 +14,11 @@ export function DangerZone() {
 
   return (
     <section
-      className="rounded-[var(--radius-lg)] border bg-[var(--surface)] p-5 sm:p-6"
-      style={{ borderColor: "color-mix(in oklab, var(--danger) 35%, transparent)" }}
+      className="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] p-5 sm:p-6"
+      style={{ borderTop: "1px solid color-mix(in oklab, var(--danger) 40%, transparent)" }}
     >
       <p
-        className="text-[11px] uppercase tracking-[0.12em] text-[var(--danger)] mb-1"
+        className="text-[12px] uppercase tracking-[0.1em] font-medium text-[var(--danger)] mb-1"
         style={{ fontFamily: "var(--font-mono)" }}
       >
         Danger zone
@@ -41,6 +42,7 @@ export function DangerZone() {
 
 function DeleteModal({ onClose }: { onClose: () => void }) {
   const router = useRouter();
+  const reduceMotion = useReducedMotion();
   const [confirm, setConfirm] = useState("");
   const [armed, setArmed] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -80,16 +82,22 @@ function DeleteModal({ onClose }: { onClose: () => void }) {
   }
 
   return (
-    <div
+    <motion.div
       className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/70"
       role="dialog"
       aria-modal="true"
       aria-labelledby="delete-title"
       onClick={() => !pending && onClose()}
+      initial={reduceMotion ? false : { opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
     >
-      <div
-        className="w-full max-w-[440px] rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface-2)] p-6 shadow-[var(--shadow-md)]"
+      <motion.div
+        className="w-full max-w-[440px] rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface-2)] p-5 sm:p-6 shadow-[var(--shadow-md)]"
         onClick={(e) => e.stopPropagation()}
+        initial={reduceMotion ? false : { opacity: 0, y: 16, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
       >
         <h3 id="delete-title" className="text-[18px] font-semibold text-[var(--text)]">
           Delete your account?
@@ -132,7 +140,7 @@ function DeleteModal({ onClose }: { onClose: () => void }) {
             {armed ? "Delete forever" : "Hold on…"}
           </Button>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

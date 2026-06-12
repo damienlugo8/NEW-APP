@@ -45,7 +45,7 @@ export function ProfileSection({ profile }: { profile: ProfileData | null }) {
           <button
             type="button"
             onClick={() => setEditing(true)}
-            className="inline-flex items-center gap-1.5 h-8 px-3 rounded-[var(--radius-sm)] border border-[var(--border-strong)] text-sm text-[var(--text)] hover:bg-[var(--surface-2)] transition-colors"
+            className="inline-flex items-center gap-1.5 h-11 px-4 sm:h-9 sm:px-3 rounded-[var(--radius-sm)] border border-[var(--border-strong)] text-sm text-[var(--text)] hover:bg-[var(--surface-2)] transition duration-200 active:scale-[0.97]"
           >
             <Pencil size={13} strokeWidth={1.5} aria-hidden />
             Edit
@@ -121,7 +121,7 @@ export function ProfileSection({ profile }: { profile: ProfileData | null }) {
       ) : (
         <dl className="grid gap-x-6 gap-y-5 sm:grid-cols-2">
           <Field label="First name" value={firstName} />
-          <Field label="Age" value={profile?.age ? String(profile.age) : "—"} />
+          <Field label="Age" value={profile?.age ? String(profile.age) : "—"} mono />
           <Field
             label="Goal"
             value={profile?.primary_goal ? GOAL_LABELS[profile.primary_goal] ?? "—" : "—"}
@@ -133,11 +133,13 @@ export function ProfileSection({ profile }: { profile: ProfileData | null }) {
   );
 }
 
-function Field({ label, value }: { label: string; value: string }) {
+function Field({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
   return (
     <div>
       <dt className="t-caption text-[var(--text-subtle)] mb-1">{label}</dt>
-      <dd className="text-[15px] text-[var(--text)]">{value}</dd>
+      <dd className={`text-[15px] text-[var(--text)]${mono ? " font-mono t-num" : ""}`}>
+        {value}
+      </dd>
     </div>
   );
 }
@@ -160,7 +162,7 @@ export function Card({
         <div className="min-w-0">
           {caption && (
             <p
-              className="text-[11px] uppercase tracking-[0.12em] text-[var(--text-subtle)] mb-1"
+              className="text-[12px] uppercase tracking-[0.1em] font-medium text-[var(--text-subtle)] mb-1"
               style={{ fontFamily: "var(--font-mono)" }}
             >
               {caption}

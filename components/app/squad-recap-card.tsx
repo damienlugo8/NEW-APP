@@ -55,6 +55,7 @@ export function SquadRecapCard({
         document.fonts.load(`700 96px ${serif}`),
         document.fonts.load(`italic 700 120px ${serif}`),
         document.fonts.load(`600 48px ${mono}`),
+        document.fonts.load(`700 56px ${mono}`),
         document.fonts.ready,
       ]);
     } catch {
@@ -135,7 +136,7 @@ export function SquadRecapCard({
       // Tier badge + streak (right aligned).
       const tier = tierForStreak(m.currentStreak);
       ctx.textAlign = "right";
-      ctx.font = `700 56px ${serif}`;
+      ctx.font = `700 56px ${mono}`;
       ctx.fillStyle = INK;
       ctx.fillText(String(m.currentStreak), W - PAD - 96, y + 22);
 
@@ -211,7 +212,7 @@ export function SquadRecapCard({
   }
 
   return (
-    <div className="rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] p-4 flex items-center justify-between gap-4">
+    <div className="rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] px-5 py-4 sm:px-6 flex items-center justify-between gap-4">
       <div className="min-w-0">
         <p className="text-sm font-medium text-[var(--text)]">Weekly recap</p>
         <p className="t-caption text-[var(--text-subtle)] mt-0.5">
@@ -223,9 +224,9 @@ export function SquadRecapCard({
         onClick={handleShare}
         disabled={busy}
         className={cn(
-          "shrink-0 inline-flex items-center gap-2 h-9 px-3.5 rounded-[var(--radius)]",
+          "shrink-0 inline-flex items-center gap-2 h-11 sm:h-9 px-4 sm:px-3.5 rounded-[var(--radius)]",
           "bg-[var(--accent)] text-[var(--accent-fg)] text-sm font-medium",
-          "hover:bg-[var(--accent-hover)] transition-colors disabled:opacity-50"
+          "hover:bg-[var(--accent-hover)] active:scale-[0.97] transition duration-200 disabled:opacity-50"
         )}
       >
         {busy ? (

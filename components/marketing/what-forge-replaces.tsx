@@ -137,7 +137,7 @@ function CompetitorPhone({ label }: { label: string }) {
         </div>
       </div>
       <span
-        className="text-[10px] uppercase tracking-[0.08em] text-[#6B6B6B]"
+        className="text-[10px] uppercase tracking-[0.08em] text-[#8B877E]"
         style={{ fontFamily: "var(--font-mono)" }}
       >
         {label}
@@ -184,7 +184,7 @@ function ForgePhone({ reduce, active }: { reduce: boolean; active: boolean }) {
             </span>
           </div>
           <span
-            className="text-[9px] uppercase tracking-[0.14em] text-[#6B6B6B]"
+            className="text-[9px] uppercase tracking-[0.14em] text-[#8B877E]"
             style={{ fontFamily: "var(--font-mono)" }}
           >
             Today

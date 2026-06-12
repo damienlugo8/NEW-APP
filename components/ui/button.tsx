@@ -5,14 +5,14 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 /**
- * Button — three variants, three sizes. Active state nudges 1px (tactile),
- * focus uses the accent outline. Transitions are intentional (150ms color,
- * 200ms transform) and respect prefers-reduced-motion via globals.css.
+ * Button — three variants, three sizes. Active state presses to 97% scale
+ * (tactile), focus uses the accent outline. Transitions are intentional
+ * (150ms) and respect prefers-reduced-motion via globals.css.
  */
 const button = cva(
   "relative inline-flex items-center justify-center gap-2 font-medium whitespace-nowrap " +
     "transition-[color,background-color,border-color,transform] duration-150 " +
-    "active:translate-y-px disabled:opacity-50 disabled:pointer-events-none " +
+    "active:scale-[0.97] disabled:opacity-50 disabled:pointer-events-none " +
     "rounded-[var(--radius)] select-none",
   {
     variants: {
@@ -31,10 +31,10 @@ const button = cva(
           "bg-[var(--danger)] text-white hover:opacity-90",
       },
       size: {
-        sm: "h-9 px-3 text-sm",
+        sm: "h-11 sm:h-9 px-3 text-sm",
         md: "h-11 px-4 text-[15px]",
         lg: "h-12 px-5 text-base",
-        icon: "h-10 w-10",
+        icon: "h-11 w-11 sm:h-10 sm:w-10",
       },
     },
     defaultVariants: { variant: "primary", size: "md" },

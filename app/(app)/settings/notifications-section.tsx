@@ -107,13 +107,16 @@ function Toggle({
       onClick={onChange}
       disabled={disabled}
       className={[
-        "relative shrink-0 h-6 w-11 rounded-full transition-colors duration-150 disabled:opacity-60",
+        // after:* pseudo-element extends the touch target to ≥44px without
+        // changing the 24px visual height of the switch.
+        "relative shrink-0 h-6 w-11 rounded-full transition-[background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.97] disabled:opacity-60",
+        "after:absolute after:-inset-x-2 after:-inset-y-2.5 after:content-['']",
         checked ? "bg-[var(--accent)]" : "bg-[var(--surface-2)] border border-[var(--border-strong)]",
       ].join(" ")}
     >
       <span
         className={[
-          "absolute top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-white transition-[left] duration-150",
+          "absolute top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-[var(--text)] transition-[left] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]",
           checked ? "left-[24px]" : "left-[3px]",
         ].join(" ")}
         aria-hidden

@@ -53,7 +53,7 @@ export function SectionCard({
       )}
     >
       {(eyebrow || title || link) && !bare && (
-        <header className="px-6 pt-5 pb-4 flex items-start justify-between gap-4">
+        <header className="px-5 sm:px-6 pt-5 pb-4 flex items-start justify-between gap-4">
           <div className="min-w-0">
             {eyebrow && (
               <p className="t-caption text-[var(--text-subtle)] mb-1.5">{eyebrow}</p>
@@ -66,7 +66,7 @@ export function SectionCard({
               className={cn(
                 "inline-flex items-center gap-1 text-xs font-medium",
                 "text-[var(--text-muted)] hover:text-[var(--text)] transition-colors",
-                "rounded-[var(--radius-sm)] px-2 py-1 -mr-2"
+                "rounded-[var(--radius-sm)] px-2 py-1 -mr-2 min-h-11 sm:min-h-0"
               )}
             >
               {link.label}

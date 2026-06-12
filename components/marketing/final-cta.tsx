@@ -51,7 +51,7 @@ export function FinalCta() {
           Start for free
         </Link>
         <p
-          className="mt-5 text-[13px] text-[#6B6B6B]"
+          className="mt-5 text-[13px] text-[#8B877E]"
           style={{ fontFamily: "var(--font-mono)" }}
         >
           No credit card required. 14-day Pro trial included.

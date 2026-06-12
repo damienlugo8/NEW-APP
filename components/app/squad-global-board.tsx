@@ -17,14 +17,19 @@ export function SquadGlobalBoard({ rows }: { rows: GlobalRow[] }) {
       {rows.map((r) => (
         <div
           key={r.rank}
-          className={cn(
-            "flex items-center gap-3 px-4 py-2.5 border-b border-[var(--border-soft)] last:border-b-0",
-            r.isYou && "bg-[var(--accent-soft)]"
-          )}
+          className="flex min-h-[64px] items-center gap-3 px-4 sm:px-5 py-2.5 border-b border-[var(--border-soft)] last:border-b-0"
+          style={
+            r.isYou
+              ? {
+                  background:
+                    "linear-gradient(90deg, var(--accent-soft) 0%, var(--surface) 60%)",
+                }
+              : undefined
+          }
         >
           <span
             className={cn(
-              "w-6 shrink-0 text-center font-mono t-num text-[13px] tabular-nums",
+              "w-10 shrink-0 text-right font-mono t-num text-[32px] leading-none",
               rankColor(r.rank)
             )}
           >
@@ -38,14 +43,18 @@ export function SquadGlobalBoard({ rows }: { rows: GlobalRow[] }) {
           >
             {r.handle}
             {r.isYou && (
-              <span className="ml-2 text-[10px] uppercase tracking-wide text-[var(--accent)]">
+              <span className="ml-2 t-caption text-[var(--accent)]">
                 you
               </span>
             )}
           </span>
           <span className="shrink-0 flex items-center gap-1.5">
-            <Flame size={13} strokeWidth={1.75} className="text-[var(--accent)]" />
-            <span className="font-mono t-num text-[15px] text-[var(--text)] tabular-nums">
+            <Flame
+              size={13}
+              strokeWidth={1.75}
+              className={r.isYou ? "text-[var(--accent)]" : "text-[var(--text-subtle)]"}
+            />
+            <span className="font-mono t-num text-[15px] text-[var(--text)]">
               {r.currentStreak}
             </span>
           </span>
@@ -55,9 +64,15 @@ export function SquadGlobalBoard({ rows }: { rows: GlobalRow[] }) {
   );
 }
 
+/**
+ * Rank numerals stay deliberately dim — big mono figures that read as
+ * texture, not headline. Top 3 carry a faint metallic cast (gold/silver/
+ * bronze pulled down to border-strong brightness) so the podium still
+ * registers without competing with handles.
+ */
 function rankColor(rank: number): string {
-  if (rank === 1) return "text-[#F5D58A]";
-  if (rank === 2) return "text-[#C9CDD2]";
-  if (rank === 3) return "text-[#D4A574]";
-  return "text-[var(--text-subtle)]";
+  if (rank === 1) return "text-[#8C7A4D]";
+  if (rank === 2) return "text-[#6E7176]";
+  if (rank === 3) return "text-[#7D6048]";
+  return "text-[var(--border-strong)]";
 }

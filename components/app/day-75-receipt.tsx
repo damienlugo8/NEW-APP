@@ -68,10 +68,10 @@ export function Day75Receipt({
   return (
     <div className="min-h-screen w-full bg-black text-white">
       {/* Actions bar */}
-      <div className="print:hidden sticky top-0 z-10 bg-black/80 backdrop-blur-md border-b border-white/10 px-5 py-3 flex items-center justify-between">
+      <div className="print:hidden sticky top-0 z-10 bg-black/80 backdrop-blur-md border-b border-white/10 px-5 py-2 flex items-center justify-between">
         <a
           href="/hard-75"
-          className="text-[13px] text-white/60 hover:text-white transition-colors"
+          className="inline-flex items-center min-h-[44px] px-2 -mx-2 text-[13px] text-white/60 hover:text-white transition-colors"
         >
           ← Back
         </a>
@@ -87,7 +87,7 @@ export function Day75Receipt({
                 });
               }
             }}
-            className="text-white hover:bg-white/10"
+            className="h-11 sm:h-9 text-white hover:bg-white/10 active:scale-[0.97]"
           >
             <Share2 size={14} strokeWidth={1.5} />
             Share
@@ -96,7 +96,7 @@ export function Day75Receipt({
             variant="ghost"
             size="sm"
             onClick={() => window.print()}
-            className="text-white hover:bg-white/10"
+            className="h-11 sm:h-9 text-white hover:bg-white/10 active:scale-[0.97]"
           >
             <Printer size={14} strokeWidth={1.5} />
             Print
@@ -117,7 +117,10 @@ export function Day75Receipt({
           >
             FORGE · No. 001
           </p>
-          <p className="text-center text-[12px] text-white/40 tracking-[0.16em] uppercase mb-12">
+          <p
+            className="text-center text-[12px] text-white/40 tracking-[0.16em] uppercase mb-12"
+            style={{ fontFamily: "var(--font-mono)" }}
+          >
             Certificate of Completion
           </p>
 
@@ -134,7 +137,7 @@ export function Day75Receipt({
           <h1
             className="text-center leading-[0.95] mb-4"
             style={{
-              fontFamily: "var(--font-serif-display)",
+              fontFamily: "var(--font-display-serif), ui-serif, Georgia, serif",
               fontSize: "clamp(6rem, 24vw, 12rem)",
               letterSpacing: "-0.04em",
               backgroundImage:
@@ -156,7 +159,7 @@ export function Day75Receipt({
           <p
             className="text-center mb-12 italic"
             style={{
-              fontFamily: "var(--font-serif-display)",
+              fontFamily: "var(--font-display-serif), ui-serif, Georgia, serif",
               fontSize: "clamp(1.1rem, 3.6vw, 1.5rem)",
               color: "#D4A574",
               letterSpacing: "-0.01em",
@@ -178,13 +181,16 @@ export function Day75Receipt({
                     "linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent)",
                 }}
               />
-              <p className="text-center text-[12px] tracking-[0.24em] uppercase text-white/40 mb-2">
+              <p
+                className="text-center text-[12px] tracking-[0.24em] uppercase text-white/40 mb-2"
+                style={{ fontFamily: "var(--font-mono)" }}
+              >
                 Awarded to
               </p>
               <p
                 className="text-center text-white mb-10"
                 style={{
-                  fontFamily: "var(--font-serif-display)",
+                  fontFamily: "var(--font-display-serif), ui-serif, Georgia, serif",
                   fontSize: "clamp(1.4rem, 5vw, 2rem)",
                   letterSpacing: "-0.02em",
                 }}
@@ -194,9 +200,10 @@ export function Day75Receipt({
             </>
           )}
 
-          {/* Receipt block */}
+          {/* Receipt block — ledger rows with dotted leaders, like a till
+              printout. Numbers tabular mono. */}
           <div
-            className="grid grid-cols-2 gap-x-6 gap-y-5 px-2"
+            className="mx-auto w-full max-w-[420px] flex flex-col gap-3"
             style={{ fontFamily: "var(--font-mono)" }}
           >
             <Field label="Started" value={fmtDate(startedAt)} />
@@ -221,14 +228,20 @@ export function Day75Receipt({
                 "linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent)",
             }}
           />
-          <p className="text-center text-[12px] tracking-[0.24em] uppercase text-white/40 mb-4">
+          <p
+            className="text-center text-[12px] tracking-[0.24em] uppercase text-white/40 mb-4"
+            style={{ fontFamily: "var(--font-mono)" }}
+          >
             The contract
           </p>
-          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-white/75 text-[13px]">
+          <ul
+            className="mx-auto w-full max-w-[420px] flex flex-col gap-2.5 text-white/75 text-[12px] tracking-[0.06em] uppercase"
+            style={{ fontFamily: "var(--font-mono)" }}
+          >
             {HARD75_TASKS.map((t) => (
-              <li key={t.key} className="flex items-center gap-2">
+              <li key={t.key} className="flex items-center gap-2.5">
                 <span
-                  className="inline-block h-1 w-1 rounded-full"
+                  className="inline-block h-1 w-1 shrink-0 rounded-full"
                   style={{ background: "#D4A574" }}
                 />
                 {t.label}
@@ -261,7 +274,10 @@ function HighlightReel({ highlights }: { highlights: ReceiptHighlight[] }) {
 
   return (
     <div className="mb-12">
-      <p className="text-center text-[12px] tracking-[0.24em] uppercase text-white/40 mb-4">
+      <p
+        className="text-center text-[12px] tracking-[0.24em] uppercase text-white/40 mb-4"
+        style={{ fontFamily: "var(--font-mono)" }}
+      >
         The transformation
       </p>
       <div className="grid grid-cols-3 gap-3">
@@ -306,11 +322,15 @@ function HighlightReel({ highlights }: { highlights: ReceiptHighlight[] }) {
 
 function Field({ label, value }: { label: string; value: string }) {
   return (
-    <div>
-      <p className="text-[10px] tracking-[0.24em] uppercase text-white/40 mb-1">
+    <div className="flex items-baseline gap-3">
+      <p className="shrink-0 text-[11px] tracking-[0.2em] uppercase text-white/45">
         {label}
       </p>
-      <p className="text-white text-[15px] tabular-nums">{value}</p>
+      <span
+        aria-hidden
+        className="flex-1 border-b border-dotted border-white/20 -translate-y-[3px]"
+      />
+      <p className="shrink-0 text-white text-[15px] tabular-nums">{value}</p>
     </div>
   );
 }

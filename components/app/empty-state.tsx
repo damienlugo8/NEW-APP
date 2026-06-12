@@ -18,8 +18,15 @@ import { cn } from "@/lib/utils";
 type Props = {
   icon: LucideIcon;
   title: React.ReactNode;
-  /** Optional italic accent inserted before `title` for the page variant. */
+  /** Optional accent inserted before `title` for the page variant. */
   italic?: string;
+  /**
+   * Render the accent in Bodoni Moda. Serif is sanctioned only for the
+   * editorial moments (landing, /daily greeting + empty state, onboarding
+   * questions, Day 75 receipt) — everywhere else the accent falls back to
+   * Geist Sans in a muted tone.
+   */
+  serif?: boolean;
   description?: React.ReactNode;
   action?: React.ReactNode;
   /** Secondary CTA shown beneath the primary action. */
@@ -32,6 +39,7 @@ export function EmptyState({
   icon: Icon,
   title,
   italic,
+  serif = false,
   description,
   action,
   secondary,
@@ -44,10 +52,18 @@ export function EmptyState({
       className={cn(
         "flex flex-col items-center text-center",
         isPage
-          ? "py-20 px-6 rounded-[var(--radius-lg)] border border-dashed border-[var(--border-strong)] bg-[color-mix(in_oklab,var(--surface)_60%,transparent)]"
+          ? "py-20 px-6 rounded-[var(--radius-lg)] border border-dashed border-[var(--border-strong)]"
           : "py-12 px-6",
         className
       )}
+      style={
+        isPage
+          ? {
+              backgroundColor:
+                "color-mix(in oklab, var(--surface) 60%, transparent)",
+            }
+          : undefined
+      }
     >
       <span
         className={cn(
@@ -61,7 +77,14 @@ export function EmptyState({
 
       {isPage && italic ? (
         <h2 className="t-h2 text-[var(--text)] max-w-[28ch]">
-          <span className="font-serif italic text-[var(--text-muted)]">{italic}</span>{" "}
+          <span
+            className={cn(
+              "text-[var(--text-muted)]",
+              serif ? "font-serif italic" : "tracking-[-0.01em]"
+            )}
+          >
+            {italic}
+          </span>{" "}
           {title}
         </h2>
       ) : (

@@ -18,12 +18,12 @@ export function SignUpForm() {
   const [state, action, pending] = useActionState(signUpAction, initial);
   if (state.ok) {
     return (
-      <div className="rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] p-6">
+      <div className="rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] px-5 py-5 sm:px-6">
         <p className="t-caption text-[var(--accent)] mb-2">Check your inbox</p>
         <h3 className="t-h3 mb-2">We sent you a verification link.</h3>
         <p className="text-sm text-[var(--text-muted)]">
           Click the link in the email to finish creating your account. The link
-          expires in 24 hours.
+          expires in <span className="font-mono t-num">24</span> hours.
         </p>
       </div>
     );
@@ -46,7 +46,10 @@ export function SignUpForm() {
       </Button>
       <p className="text-sm text-[var(--text-muted)] text-center">
         Already have an account?{" "}
-        <Link href="/login" className="text-[var(--text)] underline underline-offset-4">
+        <Link
+          href="/login"
+          className="text-[var(--text)] underline underline-offset-4 inline-flex items-center min-h-11 px-2 -mx-2 -my-3 align-middle"
+        >
           Log in
         </Link>
       </p>
@@ -71,10 +74,16 @@ export function LoginForm() {
         Log in
       </Button>
       <div className="flex items-center justify-between text-sm">
-        <Link href="/forgot-password" className="text-[var(--text-muted)] hover:text-[var(--text)]">
+        <Link
+          href="/forgot-password"
+          className="text-[var(--text-muted)] hover:text-[var(--text)] transition-colors duration-150 inline-flex items-center min-h-11 sm:min-h-9 px-2 -ml-2"
+        >
           Forgot password?
         </Link>
-        <Link href="/sign-up" className="text-[var(--text-muted)] hover:text-[var(--text)]">
+        <Link
+          href="/sign-up"
+          className="text-[var(--text-muted)] hover:text-[var(--text)] transition-colors duration-150 inline-flex items-center min-h-11 sm:min-h-9 px-2 -mr-2"
+        >
           Create account
         </Link>
       </div>
@@ -86,11 +95,11 @@ export function ForgotPasswordForm() {
   const [state, action, pending] = useActionState(forgotPasswordAction, initial);
   if (state.ok) {
     return (
-      <div className="rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] p-6">
+      <div className="rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] px-5 py-5 sm:px-6">
         <p className="t-caption text-[var(--accent)] mb-2">Check your inbox</p>
         <h3 className="t-h3 mb-2">If an account exists, a reset link is on its way.</h3>
         <p className="text-sm text-[var(--text-muted)]">
-          The link expires in 1 hour.
+          The link expires in <span className="font-mono t-num">1</span> hour.
         </p>
       </div>
     );
@@ -103,7 +112,10 @@ export function ForgotPasswordForm() {
         Send reset link
       </Button>
       <p className="text-sm text-[var(--text-muted)] text-center">
-        <Link href="/login" className="hover:text-[var(--text)]">
+        <Link
+          href="/login"
+          className="hover:text-[var(--text)] transition-colors duration-150 inline-flex items-center min-h-11 px-2 -mx-2 -my-3 align-middle"
+        >
           Back to login
         </Link>
       </p>

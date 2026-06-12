@@ -40,21 +40,29 @@ export function SquadLeaderboard({
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, delay: i * 0.04, ease: [0.16, 1, 0.3, 1] }}
             className={cn(
-              "relative flex items-center gap-3 rounded-[var(--radius)] px-4 py-3",
-              "bg-[var(--surface)] border",
+              "relative flex min-h-[64px] items-center gap-3 rounded-[var(--radius)] px-4 sm:px-5 py-3",
+              "border",
               m.isYou
-                ? "border-[var(--accent)] shadow-[0_0_0_1px_var(--accent),0_0_24px_-6px_var(--accent)]"
-                : "border-[var(--border)]"
+                ? "border-[var(--accent)]"
+                : "border-[var(--border)] bg-[var(--surface)]"
             )}
+            style={
+              m.isYou
+                ? {
+                    background:
+                      "linear-gradient(90deg, var(--accent-soft) 0%, var(--surface) 60%)",
+                  }
+                : undefined
+            }
           >
             {/* Rank */}
-            <span className="w-5 shrink-0 text-center font-mono t-num text-[13px] text-[var(--text-subtle)]">
+            <span className="w-8 shrink-0 text-center font-mono t-num text-[32px] leading-none text-[var(--border-strong)]">
               {i + 1}
             </span>
 
             {/* Tier badge */}
             <span
-              className="shrink-0 h-8 w-8 inline-flex items-center justify-center rounded-full font-serif text-[15px] font-semibold"
+              className="shrink-0 h-8 w-8 inline-flex items-center justify-center rounded-full text-[15px] font-semibold tracking-[-0.01em]"
               style={{
                 color: tierColor(tier),
                 background: "color-mix(in oklab, currentColor 14%, transparent)",
@@ -69,12 +77,12 @@ export function SquadLeaderboard({
               <p className="text-sm font-medium text-[var(--text)] truncate">
                 {m.handle}
                 {m.isYou && (
-                  <span className="ml-2 text-[10px] uppercase tracking-wide text-[var(--accent)]">
+                  <span className="ml-2 t-caption text-[var(--accent)]">
                     you
                   </span>
                 )}
               </p>
-              <p className="t-caption text-[var(--text-subtle)] mt-0.5">
+              <p className="t-caption t-num text-[var(--text-subtle)] mt-0.5">
                 {m.respectPoints} respect
               </p>
             </div>
@@ -86,7 +94,7 @@ export function SquadLeaderboard({
                 strokeWidth={1.75}
                 className={m.currentStreak > 0 ? "text-[var(--accent)]" : "text-[var(--text-subtle)]"}
               />
-              <span className="font-mono t-num text-[17px] text-[var(--text)] tabular-nums">
+              <span className="font-mono t-num text-[17px] text-[var(--text)]">
                 {m.currentStreak}
               </span>
             </div>
@@ -99,7 +107,7 @@ export function SquadLeaderboard({
                   onClick={() => onRespect(m)}
                   aria-label={`Respect ${m.handle}`}
                   title="Respect +1"
-                  className="h-7 w-7 inline-flex items-center justify-center rounded-[var(--radius-sm)] text-[var(--text-subtle)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent)] transition-colors"
+                  className="h-11 w-11 sm:h-9 sm:w-9 inline-flex items-center justify-center rounded-[var(--radius-sm)] text-[var(--text-subtle)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent)] active:scale-[0.97] transition duration-200"
                 >
                   <Plus size={14} strokeWidth={2} />
                 </button>
@@ -108,7 +116,7 @@ export function SquadLeaderboard({
                   onClick={() => onCallout(m)}
                   aria-label={`Call out ${m.handle}`}
                   title="Call out"
-                  className="h-7 w-7 inline-flex items-center justify-center rounded-[var(--radius-sm)] text-[var(--text-subtle)] hover:bg-[var(--surface-2)] hover:text-[var(--text)] transition-colors"
+                  className="h-11 w-11 sm:h-9 sm:w-9 inline-flex items-center justify-center rounded-[var(--radius-sm)] text-[var(--text-subtle)] hover:bg-[var(--surface-2)] hover:text-[var(--text)] active:scale-[0.97] transition duration-200"
                 >
                   <Megaphone size={13} strokeWidth={1.75} />
                 </button>

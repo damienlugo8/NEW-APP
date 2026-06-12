@@ -82,7 +82,7 @@ export function Pricing() {
               >
                 Free
               </p>
-              <p className="mt-2 text-[14px] text-[#6B6B6B]">Forever</p>
+              <p className="mt-2 text-[14px] text-[#8B877E]">Forever</p>
               <FeatureList items={FREE_FEATURES} />
               <CtaLink href="/onboarding" variant="bordered">
                 Get started
@@ -125,7 +125,12 @@ export function Pricing() {
                   /mo
                 </span>
               </div>
-              <p className="mt-2 text-[14px] text-[#6B6B6B]">$79/yr</p>
+              <p
+                className="mt-2 text-[14px] tabular-nums text-[#8B877E]"
+                style={{ fontFamily: "var(--font-mono)" }}
+              >
+                $79/yr
+              </p>
               <FeatureList items={PRO_FEATURES} />
               <CtaLink href="/onboarding" variant="ember">
                 Start 14-day trial
@@ -148,7 +153,7 @@ export function Pricing() {
               >
                 $199
               </p>
-              <p className="mt-2 text-[14px] text-[#6B6B6B]">One time. Forever.</p>
+              <p className="mt-2 text-[14px] text-[#8B877E]">One time. Forever.</p>
               <p className="mt-4 text-[15px] text-[#A1A1A1]">
                 Everything in Pro. Pay once.
               </p>
@@ -160,7 +165,7 @@ export function Pricing() {
           </PlanCard>
         </div>
 
-        <p className="mt-10 text-center text-[14px] text-[#6B6B6B]">
+        <p className="mt-10 text-center text-[14px] text-[#8B877E]">
           14-day free trial on Pro. Cancel anytime. No questions asked.
         </p>
       </div>

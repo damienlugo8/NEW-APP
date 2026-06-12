@@ -93,10 +93,10 @@ export function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.6 }}
-        className="absolute inset-x-0 bottom-7 z-10 mx-auto flex w-fit flex-col items-center gap-1.5"
+        className="absolute inset-x-0 bottom-5 z-10 mx-auto flex w-fit flex-col items-center gap-1.5 px-4 py-2"
       >
         <span
-          className="text-[11px] uppercase tracking-[0.2em] text-[#6B6B6B]"
+          className="text-[11px] uppercase tracking-[0.2em] text-[#8B877E]"
           style={{ fontFamily: "var(--font-mono)" }}
         >
           scroll

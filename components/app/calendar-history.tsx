@@ -30,7 +30,7 @@ export function CalendarHistory({
   const today = chrono[chrono.length - 1]?.date;
 
   return (
-    <section className="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] p-5">
+    <section className="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] p-5 sm:p-6">
       <div className="flex items-center justify-between mb-4">
         <p className="t-caption text-[var(--text-subtle)]">Last 28 days</p>
         <p className="t-caption text-[var(--text-subtle)]">
@@ -55,8 +55,7 @@ export function CalendarHistory({
               aria-label={label}
               className={cn(
                 "aspect-square rounded-[6px] border inline-flex items-center justify-center",
-                "text-[11px] font-mono tabular-nums font-semibold transition-colors",
-                isToday && "ring-2 ring-[var(--accent)]/40 ring-offset-1 ring-offset-[var(--surface)]"
+                "text-[11px] font-mono tabular-nums font-semibold transition-colors"
               )}
               style={{
                 backgroundColor: grade
@@ -67,6 +66,14 @@ export function CalendarHistory({
                   : "var(--border)",
                 color: grade ? color : "var(--text-subtle)",
                 fontFeatureSettings: "'tnum' 1, 'ss01' 1",
+                // Today ring — ring-offset + ring, hand-rolled because
+                // Tailwind v4 can't take an opacity modifier on a var class.
+                ...(isToday
+                  ? {
+                      boxShadow:
+                        "0 0 0 1px var(--surface), 0 0 0 3px color-mix(in oklab, var(--accent) 40%, transparent)",
+                    }
+                  : null),
               }}
             >
               {grade ?? "·"}

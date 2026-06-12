@@ -10,7 +10,7 @@ const UPDATED = "June 2026";
 
 export default function TermsPage() {
   return (
-    <main className="relative min-h-[70vh] overflow-hidden bg-[#0A0A0A] px-6 py-24">
+    <div className="relative min-h-[70vh] overflow-hidden bg-[#0A0A0A] px-6 py-24">
       <Grain opacity={0.06} />
       <article className="relative z-10 mx-auto max-w-[680px]">
         <p
@@ -31,7 +31,12 @@ export default function TermsPage() {
         >
           Terms of Service
         </h1>
-        <p className="mt-3 text-[13px] text-[#6B6B6B]">Last updated: {UPDATED}</p>
+        <p
+          className="mt-3 text-[13px] text-[#8B877E]"
+          style={{ fontFamily: "var(--font-mono)" }}
+        >
+          Last updated: {UPDATED}
+        </p>
 
         <p className="mt-8 text-[16px] leading-[1.7] text-[#A1A1A1]">
           By creating a FORGE account or using the app, you agree to these terms.
@@ -112,7 +117,7 @@ export default function TermsPage() {
         </Section>
 
         <p
-          className="mt-12 border-t border-[#2A2A2A] pt-6 text-[13px] text-[#6B6B6B]"
+          className="mt-12 border-t border-[#2A2A2A] pt-6 text-[13px] text-[#8B877E]"
           style={{ fontFamily: "var(--font-mono)" }}
         >
           Placeholder document — pending attorney review before launch.{" "}
@@ -121,7 +126,7 @@ export default function TermsPage() {
           </Link>
         </p>
       </article>
-    </main>
+    </div>
   );
 }
 

@@ -22,11 +22,11 @@ export function SquadCalloutFeed({ callouts }: { callouts: Callout[] }) {
   return (
     <section>
       <div className="flex items-center gap-2 mb-3">
-        <h2 className="text-sm font-medium text-[var(--text-muted)] uppercase tracking-wide">
+        <h2 className="t-caption text-[var(--text-muted)]">
           Callouts
         </h2>
         {unseen > 0 && (
-          <span className="inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full bg-[var(--accent)] text-[var(--accent-fg)] text-[11px] font-semibold t-num">
+          <span className="inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full bg-[var(--accent)] text-[var(--accent-fg)] text-[11px] font-semibold font-mono t-num">
             {unseen}
           </span>
         )}
@@ -40,7 +40,7 @@ export function SquadCalloutFeed({ callouts }: { callouts: Callout[] }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: i * 0.04, ease: [0.16, 1, 0.3, 1] }}
             className={cn(
-              "relative flex items-start gap-3 rounded-[var(--radius)] px-4 py-3 border",
+              "relative flex items-start gap-3 rounded-[var(--radius)] px-4 sm:px-5 py-3 border",
               c.seen
                 ? "bg-[var(--surface)] border-[var(--border)]"
                 : "bg-[var(--accent-soft)] border-[var(--accent)]"
@@ -61,7 +61,7 @@ export function SquadCalloutFeed({ callouts }: { callouts: Callout[] }) {
 
             <div className="min-w-0 flex-1">
               <p className="text-sm text-[var(--text)] leading-snug">{c.message}</p>
-              <p className="t-caption text-[var(--text-subtle)] mt-1">
+              <p className="t-caption t-num text-[var(--text-subtle)] mt-1">
                 from <span className="text-[var(--text-muted)]">{c.fromHandle}</span>
                 {" · "}
                 {relativeTime(c.createdAt)}

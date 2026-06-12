@@ -11,7 +11,6 @@ import {
   GOALS,
   VICES,
   PROGRAMS,
-  EMBER,
   type GoalKey,
   type ViceKey,
   type ProgramKey,
@@ -21,10 +20,11 @@ import { completeOnboarding } from "./actions";
 /**
  * FORGE onboarding wizard.
  *
- * Six steps, one question per screen, a single ember progress bar pinned at
- * the top. All step state lives here; on finish we hand a typed payload to
- * completeOnboarding (no FormData). Bodoni headlines, Geist body, Geist Mono
- * numerals, molten ember (#FF6B1A) for every selected state.
+ * Six steps, one question per screen, a single ember progress bar pinned
+ * flush to the top of the screen. All step state lives here; on finish we
+ * hand a typed payload to completeOnboarding (no FormData). Bodoni
+ * headlines, Geist body, Geist Mono numerals, var(--accent) + var(--accent-soft)
+ * for every selected state.
  */
 
 const TOTAL = 6;
@@ -116,17 +116,17 @@ export function OnboardingWizard() {
 
   return (
     <div className="w-full max-w-[520px]">
-      {/* Progress bar */}
-      <div className="mb-2 h-[3px] w-full rounded-full bg-[var(--border)] overflow-hidden">
+      {/* Progress bar — pinned flush to the very top of the screen, edge to edge */}
+      <div className="fixed inset-x-0 top-0 z-50 h-1 bg-[var(--border)]">
         <motion.div
-          className="h-full rounded-full"
-          style={{ background: EMBER }}
+          className="h-full"
+          style={{ background: "var(--accent)" }}
           initial={false}
           animate={{ width: `${progress}%` }}
-          transition={{ duration: 0.4, ease }}
+          transition={{ duration: reduce ? 0 : 0.4, ease }}
         />
       </div>
-      <p className="t-caption text-[var(--text-subtle)] mb-7 t-num tabular-nums">
+      <p className="t-caption t-num text-[var(--text-subtle)] mb-8 text-center">
         Step {step + 1} of {TOTAL}
       </p>
 
@@ -137,7 +137,7 @@ export function OnboardingWizard() {
           initial={reduce ? false : { opacity: 0, x: dir * 24 }}
           animate={{ opacity: 1, x: 0 }}
           exit={reduce ? { opacity: 0 } : { opacity: 0, x: dir * -24 }}
-          transition={{ duration: 0.3, ease }}
+          transition={{ duration: reduce ? 0.15 : 0.3, ease }}
         >
           {step === 0 && (
             <Step headline="What do we call you?">
@@ -191,7 +191,7 @@ export function OnboardingWizard() {
                         setBodyFat("");
                       }}
                       className={cn(
-                        "t-caption transition-colors",
+                        "t-caption transition-colors inline-flex items-center px-2 -mx-2 py-4 -my-4",
                         bfSkipped
                           ? "text-[var(--accent)]"
                           : "text-[var(--text-subtle)] hover:text-[var(--text-muted)]"
@@ -239,22 +239,21 @@ export function OnboardingWizard() {
                       type="button"
                       onClick={() => toggleVice(v.key)}
                       className={cn(
-                        "flex items-center gap-2.5 rounded-[var(--radius)] border px-3.5 py-3 text-left transition-colors",
-                        on
-                          ? "bg-[color-mix(in_oklab,var(--accent)_14%,transparent)]"
-                          : "border-[var(--border)] hover:border-[var(--border-strong)]"
+                        "flex min-h-[64px] items-center gap-2.5 rounded-[var(--radius)] border px-4 py-3 text-left transition-all active:scale-[0.97]",
+                        !on && "border-[var(--border)] hover:border-[var(--border-strong)]"
                       )}
-                      style={on ? { borderColor: EMBER } : undefined}
+                      style={
+                        on
+                          ? { borderColor: "var(--accent)", background: "var(--accent-soft)" }
+                          : undefined
+                      }
                     >
                       <v.icon
                         size={17}
                         strokeWidth={1.75}
-                        style={{ color: on ? EMBER : "var(--text-subtle)" }}
+                        style={{ color: on ? "var(--accent)" : "var(--text-subtle)" }}
                       />
-                      <span
-                        className="text-sm font-medium"
-                        style={{ color: on ? EMBER : "var(--text)" }}
-                      >
+                      <span className="text-sm font-medium text-[var(--text)]">
                         {v.label}
                       </span>
                     </button>
@@ -350,11 +349,11 @@ function Step({
 }) {
   return (
     <div>
-      <h1 className="font-serif text-[30px] sm:text-[34px] leading-[1.1] text-[var(--text)]">
+      <h1 className="font-serif text-[32px] sm:text-[40px] leading-[1.12] text-[var(--text)] text-center text-balance">
         {headline}
       </h1>
-      {sub && <p className="t-body text-[var(--text-muted)] mt-2.5">{sub}</p>}
-      <div className="mt-7">{children}</div>
+      {sub && <p className="t-body text-[var(--text-muted)] mt-3 text-center">{sub}</p>}
+      <div className="mt-8">{children}</div>
     </div>
   );
 }
@@ -379,18 +378,20 @@ function SelectCard({
       type="button"
       onClick={onClick}
       className={cn(
-        "group relative flex items-center gap-3.5 w-full rounded-[var(--radius)] border px-4 py-3.5 text-left transition-all",
-        selected
-          ? "bg-[color-mix(in_oklab,var(--accent)_12%,transparent)]"
-          : featured
-          ? "border-[var(--border-strong)] hover:border-[var(--accent)]"
-          : "border-[var(--border)] hover:border-[var(--border-strong)]"
+        "group relative flex min-h-[64px] items-center gap-3.5 w-full rounded-[var(--radius)] border px-5 py-4 text-left transition-all active:scale-[0.97]",
+        !selected &&
+          (featured
+            ? "border-[var(--border-strong)] hover:border-[var(--accent)]"
+            : "border-[var(--border)] hover:border-[var(--border-strong)]")
       )}
       style={
         selected
-          ? { borderColor: EMBER, boxShadow: `0 0 0 1px ${EMBER}, 0 0 24px -8px ${EMBER}` }
-          : featured
-          ? { borderColor: EMBER }
+          ? {
+              borderColor: "var(--accent)",
+              background: "var(--accent-soft)",
+              boxShadow:
+                "0 0 0 1px var(--accent), 0 0 24px -8px var(--accent)",
+            }
           : undefined
       }
     >
@@ -400,36 +401,38 @@ function SelectCard({
           background: selected
             ? "color-mix(in oklab, var(--accent) 20%, transparent)"
             : "var(--surface-2)",
-          color: selected || featured ? EMBER : "var(--text-subtle)",
+          color: selected ? "var(--accent)" : "var(--text-subtle)",
         }}
       >
         {icon}
       </span>
       <span className="min-w-0 flex-1">
         <span className="flex items-center gap-2">
-          <span
-            className="text-[15px] font-semibold"
-            style={{ color: selected ? EMBER : "var(--text)" }}
-          >
+          <span className="text-[15px] font-semibold tracking-[-0.01em] text-[var(--text)]">
             {title}
           </span>
           {featured && !selected && (
             <span
-              className="text-[10px] uppercase tracking-wide font-semibold px-1.5 py-0.5 rounded-full"
-              style={{ color: EMBER, background: "color-mix(in oklab, var(--accent) 16%, transparent)" }}
+              className="t-caption px-1.5 py-0.5 rounded-full"
+              style={{
+                color: "var(--accent)",
+                background: "color-mix(in oklab, var(--accent) 16%, transparent)",
+              }}
             >
               Featured
             </span>
           )}
         </span>
-        <span className="block t-caption text-[var(--text-subtle)] mt-0.5">{blurb}</span>
+        <span className="block text-xs leading-snug text-[var(--text-muted)] mt-1">
+          {blurb}
+        </span>
       </span>
       <span
         className={cn(
           "shrink-0 h-5 w-5 rounded-full border inline-flex items-center justify-center transition-colors",
           selected ? "border-transparent" : "border-[var(--border-strong)]"
         )}
-        style={selected ? { background: EMBER } : undefined}
+        style={selected ? { background: "var(--accent)" } : undefined}
         aria-hidden
       >
         {selected && <Check size={13} strokeWidth={3} className="text-white" />}

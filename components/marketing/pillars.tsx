@@ -141,7 +141,7 @@ function MockHeader({ label, right }: { label: string; right?: ReactNode }) {
   return (
     <div className="mb-4 flex items-center justify-between">
       <span
-        className="text-[11px] uppercase tracking-[0.16em] text-[#6B6B6B]"
+        className="text-[11px] uppercase tracking-[0.16em] text-[#8B877E]"
         style={{ fontFamily: "var(--font-mono)" }}
       >
         {label}
@@ -191,7 +191,7 @@ function DailyMock() {
         </div>
         <div>
           <p className="text-[15px] font-medium text-white">Strong day.</p>
-          <p className="mt-0.5 text-[13px] text-[#6B6B6B]">3 of 4 logged</p>
+          <p className="mt-0.5 text-[13px] text-[#8B877E]">3 of 4 logged</p>
         </div>
       </div>
       <div className="space-y-2.5">
@@ -211,7 +211,7 @@ function DailyMock() {
               {h.done && <Check size={12} strokeWidth={3} className="text-[#0A0A0A]" />}
             </span>
             <span
-              className={`text-[14px] ${h.done ? "text-white" : "text-[#6B6B6B]"}`}
+              className={`text-[14px] ${h.done ? "text-white" : "text-[#8B877E]"}`}
             >
               {h.name}
             </span>
@@ -250,7 +250,7 @@ function Forge75Mock() {
           42
         </span>
         <span
-          className="pb-2 text-[1.5rem] text-[#6B6B6B]"
+          className="pb-2 text-[1.5rem] text-[#8B877E]"
           style={{ fontFamily: "var(--font-mono)" }}
         >
           /75
@@ -285,7 +285,7 @@ function Forge75Mock() {
               )}
             </span>
             <span
-              className="text-[8px] uppercase tracking-[0.06em] text-[#6B6B6B]"
+              className="text-[8px] uppercase tracking-[0.06em] text-[#8B877E]"
               style={{ fontFamily: "var(--font-mono)" }}
             >
               {t}
@@ -325,7 +325,7 @@ function FuelMock() {
       <p className="text-[15px] font-medium text-white">
         Chicken, rice &amp; greens
       </p>
-      <p className="mb-4 mt-0.5 text-[13px] text-[#6B6B6B]">
+      <p className="mb-4 mt-0.5 text-[13px] text-[#8B877E]">
         High-protein · from what you have
       </p>
       <div className="space-y-2.5">
@@ -368,7 +368,7 @@ function BlockMock() {
         label="Block"
         right={
           <span
-            className="rounded-full border border-[#2A2A2A] px-2 py-0.5 text-[10px] uppercase tracking-[0.1em] text-[#6B6B6B]"
+            className="rounded-full border border-[#2A2A2A] px-2 py-0.5 text-[10px] uppercase tracking-[0.1em] text-[#8B877E]"
             style={{ fontFamily: "var(--font-mono)" }}
           >
             Coming to iOS
@@ -383,7 +383,7 @@ function BlockMock() {
         <div>
           <p className="text-[14px] font-medium text-white">Blackout window</p>
           <p
-            className="text-[12px] text-[#6B6B6B]"
+            className="text-[12px] text-[#8B877E]"
             style={{ fontFamily: "var(--font-mono)" }}
           >
             10:00 PM — 6:00 AM
@@ -397,7 +397,7 @@ function BlockMock() {
             className="flex items-center justify-between rounded-[10px] border border-[#1B1B1B] bg-[#121110] px-3 py-2.5"
           >
             <span className="flex items-center gap-2.5 text-[14px] text-white">
-              <Smartphone size={14} strokeWidth={1.75} className="text-[#6B6B6B]" />
+              <Smartphone size={14} strokeWidth={1.75} className="text-[#8B877E]" />
               {a.name}
             </span>
             <span
@@ -454,7 +454,7 @@ function SquadMock() {
             }
           >
             <span
-              className="w-4 text-[13px] text-[#6B6B6B]"
+              className="w-4 text-[13px] text-[#8B877E]"
               style={{ fontFamily: "var(--font-mono)" }}
             >
               {i + 1}

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Grain } from "@/components/marketing/grain";
 
 export const metadata = { title: "Press Kit" };
 
@@ -8,8 +9,9 @@ export const metadata = { title: "Press Kit" };
  */
 export default function PressPage() {
   return (
-    <main className="min-h-[70vh] bg-[#0A0A0A] px-6 py-24">
-      <div className="mx-auto max-w-[680px]">
+    <div className="relative min-h-[70vh] overflow-hidden bg-[#0A0A0A] px-6 py-24">
+      <Grain opacity={0.06} />
+      <div className="relative z-10 mx-auto max-w-[680px]">
         <p
           className="text-[12px] uppercase tracking-[0.15em] text-[#FF6B1A]"
           style={{ fontFamily: "var(--font-mono)" }}
@@ -37,7 +39,7 @@ export default function PressPage() {
         <dl className="mt-10 space-y-6 border-t border-[#2A2A2A] pt-8">
           <div>
             <dt
-              className="text-[12px] uppercase tracking-[0.12em] text-[#6B6B6B]"
+              className="text-[12px] uppercase tracking-[0.12em] text-[#8B877E]"
               style={{ fontFamily: "var(--font-mono)" }}
             >
               Tagline
@@ -46,7 +48,7 @@ export default function PressPage() {
           </div>
           <div>
             <dt
-              className="text-[12px] uppercase tracking-[0.12em] text-[#6B6B6B]"
+              className="text-[12px] uppercase tracking-[0.12em] text-[#8B877E]"
               style={{ fontFamily: "var(--font-mono)" }}
             >
               Media inquiries
@@ -62,7 +64,7 @@ export default function PressPage() {
           </div>
         </dl>
 
-        <p className="mt-12 text-[14px] text-[#6B6B6B]">
+        <p className="mt-12 text-[14px] text-[#8B877E]">
           Logos, screenshots, and boilerplate are on the way.{" "}
           <Link href="/" className="text-[#A1A1A1] hover:text-white">
             Back to home
@@ -70,6 +72,6 @@ export default function PressPage() {
           .
         </p>
       </div>
-    </main>
+    </div>
   );
 }

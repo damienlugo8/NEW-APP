@@ -105,12 +105,12 @@ export function ProtocolBanner() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@email.com"
                     aria-label="Email address"
-                    className="h-10 w-full min-w-0 rounded-[8px] border border-[#2A2A2A] bg-[#0E0D0C] px-3 text-[14px] text-white placeholder:text-[#6B6B6B] focus:border-[#FF6B1A] focus:outline-none sm:w-[220px]"
+                    className="h-11 w-full min-w-0 rounded-[8px] border border-[#2A2A2A] bg-[#0E0D0C] px-3 text-[14px] text-white placeholder:text-[#8B877E] focus:border-[#FF6B1A] focus:outline-none sm:h-10 sm:w-[220px]"
                   />
                   <button
                     type="submit"
                     disabled={pending}
-                    className="inline-flex h-10 shrink-0 items-center justify-center rounded-[8px] bg-[#FF6B1A] px-4 text-[14px] font-medium text-[#0A0A0A] transition-[filter] duration-150 hover:brightness-110 disabled:opacity-60"
+                    className="inline-flex h-11 shrink-0 items-center justify-center rounded-[8px] bg-[#FF6B1A] px-4 text-[14px] font-medium text-[#0A0A0A] transition-[transform,filter] duration-150 hover:brightness-110 active:scale-[0.97] disabled:opacity-60 sm:h-10"
                   >
                     {pending ? "Sending…" : "Send it"}
                   </button>
@@ -122,7 +122,7 @@ export function ProtocolBanner() {
               type="button"
               onClick={dismiss}
               aria-label="Dismiss"
-              className="absolute right-3 top-3 text-[#6B6B6B] transition-colors hover:text-white sm:static"
+              className="absolute right-1 top-1 flex h-11 w-11 items-center justify-center text-[#8B877E] transition-colors hover:text-white sm:static sm:h-9 sm:w-9 sm:shrink-0"
             >
               <X size={18} strokeWidth={1.75} />
             </button>

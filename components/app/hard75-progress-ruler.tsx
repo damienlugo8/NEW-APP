@@ -72,13 +72,15 @@ export function Hard75ProgressRuler({
       <header className="flex items-baseline justify-between mb-4">
         <div>
           <p className="t-caption text-[var(--text-subtle)] mb-1">Forge</p>
-          <h3 className="t-day-serif text-[1.35rem] leading-none">
-            <em className="text-[var(--text-muted)]">Day</em>{" "}
-            <span className="text-[var(--text)] t-num-display">
-              {currentDay}
+          <h3 className="flex items-baseline gap-2 leading-none">
+            <span className="text-[15px] font-semibold tracking-[-0.01em] text-[var(--text-muted)]">
+              Day
             </span>
-            <span className="text-[var(--text-subtle)] t-num-display">
-              /{HARD75_DURATION}
+            <span className="t-num-display text-[2rem] sm:text-[2.5rem]">
+              <span className="text-[var(--text)]">{currentDay}</span>
+              <span className="text-[var(--text-subtle)]">
+                /{HARD75_DURATION}
+              </span>
             </span>
           </h3>
         </div>
@@ -138,15 +140,32 @@ function Cell({
       className={cn(
         "aspect-square rounded-[3px] relative",
         status === "full" && "bg-[var(--accent)]",
-        status === "partial" && "bg-[var(--accent)]/35",
-        status === "empty" && "bg-[var(--surface-2)] border border-[var(--border-soft)]",
+        status === "partial" &&
+          "bg-[color-mix(in_oklab,var(--accent)_35%,transparent)]",
+        status === "empty" &&
+          "bg-[var(--surface-2)] border border-[var(--border-soft)]",
         status === "future" && "border border-dashed border-[var(--border-soft)]",
         isToday &&
           "border border-[var(--accent)] shadow-[0_0_0_2px_color-mix(in_oklab,var(--accent)_22%,transparent)]",
-        status === "today-partial" && "bg-[var(--accent)]/30 ember-pulse",
-        status === "today-empty" && "ember-pulse"
+        status === "today-partial" &&
+          "bg-[color-mix(in_oklab,var(--accent)_30%,transparent)]"
       )}
     >
+      {/* Today's ember pulse — slow opacity/scale loop, stilled under
+          reduced motion. */}
+      {isToday && !reduce && (
+        <motion.span
+          aria-hidden
+          className="absolute -inset-[2px] rounded-[4px] pointer-events-none"
+          style={{
+            background:
+              "color-mix(in oklab, var(--accent) 30%, transparent)",
+            boxShadow: "0 0 10px var(--molten-glow)",
+          }}
+          animate={{ opacity: [0.3, 0.85, 0.3], scale: [1, 1.18, 1] }}
+          transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+        />
+      )}
       {/* Partial completion bar at bottom — only for non-today partials */}
       {status === "partial" && pct > 0 && pct < 1 && (
         <span

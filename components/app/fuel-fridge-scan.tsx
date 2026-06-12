@@ -113,16 +113,18 @@ export function FuelFridgeScan({
           type="button"
           onClick={() => fileRef.current?.click()}
           className={cn(
-            "group w-full flex items-center justify-center gap-2.5 rounded-[12px]",
-            "h-[60px] px-5 font-semibold text-[16px] text-white",
-            "transition-transform active:translate-y-px"
+            "group w-full flex items-center justify-start gap-3 rounded-[var(--radius)]",
+            "h-16 px-6 font-semibold text-[16px] text-white text-left",
+            "transition-transform active:scale-[0.97]"
           )}
           style={{
-            background: `linear-gradient(180deg, ${EMBER} 0%, #E25A0F 100%)`,
-            boxShadow: "0 6px 20px -6px rgba(255,107,26,0.45)",
+            background:
+              "linear-gradient(180deg, var(--accent) 0%, color-mix(in oklab, var(--accent) 86%, black) 100%)",
+            boxShadow:
+              "0 6px 20px -6px color-mix(in oklab, var(--accent) 45%, transparent)",
           }}
         >
-          <Camera size={20} strokeWidth={2} />
+          <Camera size={20} strokeWidth={2} className="shrink-0" />
           Scan your fridge
         </button>
       )}
@@ -139,10 +141,7 @@ export function FuelFridgeScan({
       {phase === "results" && result && (
         <div className="space-y-3">
           {result.ingredients_detected.length > 0 && (
-            <p
-              className="text-[12px] uppercase tracking-[0.12em]"
-              style={{ fontFamily: "var(--font-mono)", color: TEXT_FAINT }}
-            >
+            <p className="t-caption text-[var(--text-subtle)]">
               Detected: {result.ingredients_detected.slice(0, 6).join(" · ")}
             </p>
           )}
@@ -183,8 +182,7 @@ export function FuelFridgeScan({
           <button
             type="button"
             onClick={reset}
-            className="inline-flex items-center gap-1.5 text-[13px] font-medium hover:opacity-80 transition-opacity"
-            style={{ color: EMBER }}
+            className="inline-flex items-center gap-1.5 h-11 sm:h-9 -ml-2 px-2 text-[13px] font-medium text-[var(--accent)] hover:opacity-80 transition-opacity"
           >
             <RefreshCw size={13} strokeWidth={2} />
             Scan again
@@ -282,7 +280,7 @@ function ErrorCard({
       <button
         type="button"
         onClick={onRetry}
-        className="mt-4 inline-flex items-center gap-1.5 h-9 px-4 rounded-[8px] text-[13px] font-semibold text-white"
+        className="mt-4 inline-flex items-center gap-1.5 h-11 sm:h-9 px-4 rounded-[8px] text-[13px] font-semibold text-white transition-transform active:scale-[0.97]"
         style={{ background: EMBER }}
       >
         <RefreshCw size={13} strokeWidth={2.25} />
@@ -357,7 +355,7 @@ function MealCard({
             <button
               type="button"
               onClick={() => setOpenIngredients((v) => !v)}
-              className="flex items-center gap-1.5 text-[13px] font-medium text-white hover:opacity-80 transition-opacity"
+              className="min-h-[44px] sm:min-h-0 flex items-center gap-1.5 text-[13px] font-medium text-white hover:opacity-80 transition-opacity"
             >
               <ChevronDown
                 size={14}
@@ -428,7 +426,7 @@ function MealCard({
             disabled={logging}
             className={cn(
               "flex-1 h-11 inline-flex items-center justify-center gap-2 rounded-[8px]",
-              "text-[14px] font-semibold text-white disabled:opacity-60 transition-transform active:translate-y-px"
+              "text-[14px] font-semibold text-white disabled:opacity-60 transition-transform active:scale-[0.97]"
             )}
             style={{ background: EMBER }}
           >

@@ -36,7 +36,7 @@ export default async function SettingsPage() {
         </h1>
       </header>
 
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-6">
         <ProfileSection profile={profile} />
 
         <SubscriptionSection

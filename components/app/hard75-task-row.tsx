@@ -37,14 +37,14 @@ export function Hard75TaskRow({
       onClick={() => !disabled && onToggle(!checked)}
       disabled={pending || disabled}
       aria-pressed={checked}
-      whileTap={reduce || disabled ? undefined : { scale: 0.985 }}
-      transition={{ duration: 0.12 }}
+      whileTap={reduce || disabled ? undefined : { scale: 0.97 }}
+      transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
       className={cn(
         "group w-full flex items-center gap-3 px-4 py-3.5 min-h-[72px]",
         "rounded-[var(--radius-lg)] border text-left transition-colors",
         "active:bg-[var(--surface-2)]",
         checked
-          ? "bg-[var(--accent-soft)] border-[var(--accent)]/45 text-[var(--text)]"
+          ? "bg-[var(--accent-soft)] border-[color-mix(in_oklab,var(--accent)_45%,transparent)] text-[var(--text)]"
           : "bg-[var(--surface)] border-[var(--border)] text-[var(--text)] hover:border-[var(--border-strong)]",
         pending && "opacity-60 cursor-wait",
         disabled && "opacity-50 cursor-not-allowed"
@@ -55,7 +55,7 @@ export function Hard75TaskRow({
         className={cn(
           "h-10 w-10 shrink-0 rounded-[10px] inline-flex items-center justify-center transition-colors",
           checked
-            ? "bg-[var(--accent)]/15 text-[var(--accent)]"
+            ? "bg-[color-mix(in_oklab,var(--accent)_15%,transparent)] text-[var(--accent)]"
             : "bg-[var(--surface-2)] text-[var(--text-subtle)] group-hover:text-[var(--text-muted)]"
         )}
       >
@@ -66,8 +66,7 @@ export function Hard75TaskRow({
         <span
           className={cn(
             "block text-[15px] font-medium leading-tight",
-            checked &&
-              "line-through decoration-[var(--accent)]/45 decoration-[1.5px]"
+            checked && "line-through decoration-[1.5px]"
           )}
         >
           {task.label}

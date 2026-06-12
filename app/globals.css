@@ -11,7 +11,7 @@
    Palette: FORGED IRON
      bg          near-black with a 1% warm tilt (not Apple-cold-blue-black)
      surface     iron with grain
-     accent      deep ember #E07A2C — burnt, controlled
+     accent      ember #FF6B1A in dark (brand call) / #C4661F on light for AA
      molten      #FF6B1A — used ONLY on streak fires, milestone receipts,
                  and progress-photo Day 75 reveal. Reserve = power.
 
@@ -86,11 +86,11 @@
 
   --text:          #F5F2EC;
   --text-muted:    #A09C93;
-  --text-subtle:   #6E6A62;
+  --text-subtle:   #8B877E;
 
-  /* Deep ember on iron — sits warm against the bg, not loud */
-  --accent:        #E07A2C;
-  --accent-hover:  #ED8A3C;
+  /* Ember on iron — the brand mark. Earns every appearance. */
+  --accent:        #FF6B1A;
+  --accent-hover:  #FF7E33;
   --accent-soft:   #2A1B0F;
   --accent-soft-2: #3A2515;
   --accent-fg:     #0A0908;

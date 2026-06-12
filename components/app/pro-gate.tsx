@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Sparkles, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -21,6 +21,7 @@ export function ProGate({
   reason: string;
   children: React.ReactNode;
 }) {
+  const reduceMotion = useReducedMotion();
   if (!active) return <>{children}</>;
   return (
     <div className="relative">
@@ -34,9 +35,9 @@ export function ProGate({
 
       {/* Overlay */}
       <motion.div
-        initial={{ opacity: 0, y: 8 }}
+        initial={reduceMotion ? false : { opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.28 }}
+        transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
         className="absolute inset-0 z-10 flex items-start justify-center pt-24 px-5"
       >
         <div className="max-w-[440px] w-full rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] shadow-[var(--shadow-md)] p-6 text-center">
@@ -61,7 +62,8 @@ export function ProGate({
             </Link>
           </div>
           <p className="text-[11px] text-[var(--text-subtle)] mt-4">
-            $39/mo. Cancel any time, two taps, no email.
+            <span className="font-mono t-num">$39/mo</span>. Cancel any time,
+            two taps, no email.
           </p>
         </div>
       </motion.div>

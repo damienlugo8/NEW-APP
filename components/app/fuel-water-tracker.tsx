@@ -6,8 +6,6 @@ import { Plus, Undo2, Droplet } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { GALLON_OZ, WATER_POUR_OZ } from "@/lib/types/fuel";
 
-const EMBER = "#FF6B1A";
-
 /**
  * FUEL — water tracker.
  *
@@ -70,25 +68,40 @@ export function FuelWaterTracker({
 
   return (
     <motion.div
-      className="relative rounded-[var(--radius)] border bg-[var(--surface)] px-5 py-4"
+      className="relative rounded-[var(--radius)] border bg-[var(--surface)] px-5 py-4 sm:px-6"
       animate={
         celebrate && !reduce
-          ? { borderColor: [EMBER, "var(--border)"], boxShadow: [`0 0 0 2px ${EMBER}55`, "0 0 0 0px transparent"] }
+          ? { borderColor: ["var(--accent)", "var(--border)"] }
           : { borderColor: "var(--border)" }
       }
       transition={{ duration: 2, ease: "easeOut" }}
       style={{ borderColor: "var(--border)" }}
     >
       <AnimatePresence>
+        {celebrate && !reduce && (
+          <motion.div
+            key="gallon-glow"
+            aria-hidden
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [1, 0] }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 2, ease: "easeOut" }}
+            className="pointer-events-none absolute inset-0 rounded-[var(--radius)]"
+            style={{
+              boxShadow:
+                "0 0 0 2px color-mix(in oklab, var(--accent) 35%, transparent)",
+            }}
+          />
+        )}
         {celebrate && (
           <motion.div
             key="gallon-flash"
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
             className="absolute -top-2 right-4 z-10 px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wide"
-            style={{ background: EMBER, color: "#fff", fontFamily: "var(--font-mono)" }}
+            style={{ background: "var(--accent)", color: "#fff", fontFamily: "var(--font-mono)" }}
           >
             Gallon hit.
           </motion.div>
@@ -103,7 +116,7 @@ export function FuelWaterTracker({
               goalHit ? "text-[var(--accent)]" : "text-[var(--text-subtle)]"
             )}
           />
-          <p className="t-caption text-[var(--text-subtle)]">
+          <p className="t-caption t-num text-[var(--text-subtle)]">
             Water — {optimisticCount * WATER_POUR_OZ}oz of {GALLON_OZ}oz
           </p>
         </div>
@@ -114,10 +127,10 @@ export function FuelWaterTracker({
             disabled={optimisticCount <= 0}
             aria-label="Undo last pour"
             className={cn(
-              "h-7 w-7 inline-flex items-center justify-center rounded-[var(--radius-sm)]",
+              "h-11 w-11 sm:h-8 sm:w-8 inline-flex items-center justify-center rounded-[var(--radius-sm)]",
               "text-[var(--text-subtle)] hover:bg-[var(--surface-2)] hover:text-[var(--text)]",
               "disabled:opacity-30 disabled:hover:bg-transparent disabled:cursor-not-allowed",
-              "transition-colors"
+              "transition active:scale-[0.97]"
             )}
           >
             <Undo2 size={13} strokeWidth={1.75} />
@@ -128,10 +141,10 @@ export function FuelWaterTracker({
             disabled={goalHit}
             aria-label="Add 8 oz"
             className={cn(
-              "h-7 inline-flex items-center gap-1 px-2.5 rounded-[var(--radius-sm)]",
+              "h-11 sm:h-8 inline-flex items-center gap-1 px-3 sm:px-2.5 rounded-[var(--radius-sm)]",
               "bg-[var(--accent-soft)] text-[var(--accent)] text-[12px] font-semibold",
               "hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed",
-              "transition"
+              "transition active:scale-[0.97]"
             )}
           >
             <Plus size={12} strokeWidth={2.25} />

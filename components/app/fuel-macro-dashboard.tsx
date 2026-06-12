@@ -5,9 +5,6 @@ import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { clampPct, type MacroTargets } from "@/lib/types/fuel";
 
-const EMBER = "#FF6B1A";
-const DANGER = "#EF4444";
-
 /**
  * FUEL — macro dashboard.
  *
@@ -103,14 +100,14 @@ function Tile({
 }) {
   // Bar/number color: red when over a ceiling, ember when a goal is hit,
   // otherwise the neutral accent fill / default text.
-  const numberColor = warn ? DANGER : hit ? EMBER : undefined;
-  const barColor = warn ? DANGER : hit ? EMBER : "var(--accent)";
+  const numberColor = warn ? "var(--danger)" : hit ? "var(--accent)" : undefined;
+  const barColor = warn ? "var(--danger)" : "var(--accent)";
 
   return (
     <div
       className={cn(
         "relative overflow-hidden rounded-[var(--radius)] border border-[var(--border)]",
-        "bg-[var(--surface)] px-5 py-4",
+        "bg-[var(--surface)] px-5 py-4 sm:px-6",
         hero ? "py-6" : ""
       )}
     >
@@ -123,7 +120,7 @@ function Tile({
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
               className="inline-flex h-4 w-4 items-center justify-center rounded-full"
-              style={{ background: EMBER }}
+              style={{ background: "var(--accent)" }}
               aria-label="Target hit"
             >
               <Check size={10} strokeWidth={3} color="#fff" />
@@ -155,7 +152,10 @@ function Tile({
       </div>
 
       <div
-        className="mt-3 h-1 rounded-full bg-[var(--surface-2)] overflow-hidden"
+        className={cn(
+          "mt-3 rounded-full bg-[var(--surface-2)] overflow-hidden",
+          hero ? "h-2.5" : "h-2"
+        )}
         aria-hidden
       >
         <motion.div

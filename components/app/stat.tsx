@@ -33,7 +33,7 @@ export function Stat({ eyebrow, value, helper, icon: Icon, delta, href, classNam
     <div
       className={cn(
         "group h-full rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)]",
-        "p-5 flex flex-col gap-4 transition-colors duration-150",
+        "px-5 py-5 sm:px-6 flex flex-col gap-4 transition-colors duration-150",
         href && "hover:border-[var(--border-strong)] hover:bg-[var(--surface-2)]",
         className
       )}
@@ -66,7 +66,7 @@ export function Stat({ eyebrow, value, helper, icon: Icon, delta, href, classNam
 
   if (href) {
     return (
-      <Link href={href} className="block focus-visible:outline-none">
+      <Link href={href} className="block rounded-[var(--radius-lg)]">
         {body}
       </Link>
     );

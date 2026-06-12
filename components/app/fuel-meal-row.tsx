@@ -20,13 +20,16 @@ export function FuelMealRow({ meal }: { meal: MealLog }) {
   });
 
   return (
-    <li className="rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] px-4 py-3">
+    <li
+      className="rounded-[var(--radius)] border border-[var(--border)] border-l-2 bg-[var(--surface)] px-5 py-4 sm:px-6"
+      style={{ borderLeftColor: "var(--accent)" }}
+    >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="text-sm font-medium text-[var(--text)] truncate">
             {meal.mealName}
           </p>
-          <p className="t-caption text-[var(--text-subtle)] mt-0.5">
+          <p className="t-caption t-num text-[var(--text-subtle)] mt-0.5">
             {time}
           </p>
         </div>
@@ -68,7 +71,7 @@ function Macro({
 }) {
   return (
     <div className="flex items-baseline gap-1">
-      <dt className="text-[10px] uppercase tracking-wide text-[var(--text-subtle)]">
+      <dt className="text-[11px] uppercase tracking-wide text-[var(--text-subtle)]">
         {label}
       </dt>
       <dd

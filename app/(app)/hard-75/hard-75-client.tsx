@@ -142,8 +142,14 @@ export function Hard75Client({
         <p className="t-caption text-[var(--accent)] mb-2">
           {displayName ? `Hey, ${displayName}` : "Hard 75"}
         </p>
-        <h1 className="t-day-serif">
-          <em>Day {state.currentDay}.</em>{" "}
+        <h1 className="text-[2rem] sm:text-[2.5rem] font-bold tracking-[-0.01em] leading-[1.05]">
+          <span className="text-[var(--text-muted)]">
+            Day{" "}
+            <span className="t-num-mono font-semibold">
+              {state.currentDay}
+            </span>
+            .
+          </span>{" "}
           <span className="text-[var(--text)]">
             {state.currentDay === 1
               ? "Begin."
@@ -161,7 +167,7 @@ export function Hard75Client({
         initial={reduce ? false : { opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        className="brand-wash grain rounded-[var(--radius-lg)] border border-[var(--border)] p-5 sm:p-6 mb-5 relative overflow-hidden"
+        className="brand-wash grain rounded-[var(--radius-lg)] border border-[var(--border)] px-5 py-5 sm:px-6 sm:py-6 mb-6 relative overflow-hidden"
       >
         <div className="relative z-10 flex items-center justify-between gap-5">
           <div className="min-w-0">
@@ -213,7 +219,7 @@ export function Hard75Client({
       </motion.section>
 
       {/* Progress ruler */}
-      <div className="mb-5">
+      <div className="mb-6">
         <Hard75ProgressRuler
           history={historyForRuler}
           currentDay={state.currentDay}
@@ -221,7 +227,7 @@ export function Hard75Client({
       </div>
 
       {/* Task list */}
-      <section className="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] p-3 sm:p-4 mb-5">
+      <section className="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] p-3 sm:p-4 mb-6">
         <div className="flex items-center justify-between px-2 mb-2">
           <p className="t-caption text-[var(--text-subtle)]">Today's contract</p>
           <p className="t-num-mono text-xs text-[var(--text-muted)]">
@@ -255,8 +261,8 @@ export function Hard75Client({
         <motion.div
           initial={reduce ? false : { opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="mb-5"
+          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-6"
         >
           <Button
             variant="primary"
@@ -282,7 +288,7 @@ export function Hard75Client({
           variant="ghost"
           size="sm"
           onClick={() => setResetOpen(true)}
-          className="text-[var(--text-muted)] hover:text-[var(--molten)]"
+          className="text-[var(--danger)] hover:text-[var(--danger)] hover:bg-[color-mix(in_oklab,var(--danger)_10%,transparent)]"
         >
           <RotateCcw size={13} strokeWidth={1.5} />
           I missed one
@@ -310,8 +316,8 @@ function CompletedView({
   return (
     <div className="mx-auto max-w-[640px] px-5 lg:px-8 py-12 pb-28 lg:pb-16 text-center">
       <p className="t-caption text-[var(--accent)] mb-2">Hard 75</p>
-      <h1 className="t-display-serif text-[2.25rem] sm:text-[2.75rem] leading-[1.05] mb-4">
-        <em className="text-[var(--text-muted)]">You</em>{" "}
+      <h1 className="text-[2.25rem] sm:text-[2.75rem] font-bold tracking-[-0.01em] leading-[1.05] mb-4">
+        <span className="text-[var(--text-muted)]">You</span>{" "}
         <span className="text-[var(--text)]">finished.</span>
       </h1>
       <p className="t-body text-[var(--text-muted)] max-w-[44ch] mx-auto mb-8">

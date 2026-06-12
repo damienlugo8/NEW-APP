@@ -88,7 +88,7 @@ export function TopBar({ email }: { email: string }) {
             aria-haspopup="menu"
             aria-expanded={open}
             className={cn(
-              "inline-flex items-center gap-2 h-9 pl-1 pr-2 rounded-[var(--radius)]",
+              "inline-flex items-center gap-2 h-11 sm:h-9 pl-1 pr-2 rounded-[var(--radius)]",
               "hover:bg-[var(--surface-2)] transition-colors"
             )}
           >
@@ -128,7 +128,7 @@ export function TopBar({ email }: { email: string }) {
                 <button
                   type="submit"
                   role="menuitem"
-                  className="w-full flex items-center gap-2 px-3 h-9 rounded-[var(--radius-sm)] text-sm text-[var(--text)] hover:bg-[var(--surface-2)] transition-colors"
+                  className="w-full flex items-center gap-2 px-3 h-11 sm:h-9 rounded-[var(--radius-sm)] text-sm text-[var(--text)] hover:bg-[var(--surface-2)] transition-colors"
                 >
                   <LogOut size={14} strokeWidth={1.5} className="text-[var(--text-subtle)]" />
                   Sign out

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion, useReducedMotion } from "framer-motion";
 import {
   Flame,
   Utensils,
@@ -17,7 +18,8 @@ type Tab = { href: string; label: string; icon: LucideIcon };
 /**
  * Bottom tabs on mobile. Five slots, capped intentionally — BLOCK lives
  * behind Settings (or under Hard 75 once it exists). The active tab gets
- * an ember top-edge rail mirroring the desktop sidebar idiom.
+ * an ember top-edge rail (sliding via layoutId) mirroring the desktop
+ * sidebar idiom. Labels show on the active tab only — icons carry the rest.
  */
 const TABS: Tab[] = [
   { href: "/daily",        label: "Daily",    icon: Flame },
@@ -29,16 +31,18 @@ const TABS: Tab[] = [
 
 export function MobileNav() {
   const path = usePathname();
+  const reduceMotion = useReducedMotion();
   return (
     <nav
       role="navigation"
       aria-label="Primary"
       className={cn(
         "lg:hidden print:hidden fixed inset-x-0 bottom-0 z-30",
-        "bg-[color-mix(in_oklab,var(--bg)_88%,transparent)] backdrop-blur-md",
-        "border-t border-[var(--border)]",
+        "backdrop-blur-sm border-t border-[var(--border)]",
         "pb-[env(safe-area-inset-bottom)]"
       )}
+      // Solid near-black with a whisper of blur underneath — reads opaque.
+      style={{ backgroundColor: "color-mix(in oklab, var(--bg) 97%, transparent)" }}
     >
       <ul className="grid grid-cols-5">
         {TABS.map((t) => {
@@ -52,31 +56,35 @@ export function MobileNav() {
                 href={t.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "relative flex-1 flex flex-col items-center justify-center gap-0.5 py-2.5 min-h-[60px]",
-                  "transition-colors duration-150",
+                  "relative flex-1 flex flex-col items-center justify-center gap-1 h-[60px]",
+                  "transition-colors duration-200",
                   active
                     ? "text-[var(--accent)]"
                     : "text-[var(--text-subtle)] hover:text-[var(--text)]"
                 )}
               >
-                {/* Top-edge ember rail mirrors the desktop sidebar */}
+                {/* Sliding ember rail above the active icon */}
+                {active && (
+                  <motion.span
+                    layoutId="mobile-nav-indicator"
+                    transition={
+                      reduceMotion
+                        ? { duration: 0 }
+                        : { duration: 0.25, ease: [0.16, 1, 0.3, 1] }
+                    }
+                    className="absolute top-0 inset-x-0 mx-auto h-[2px] w-8 rounded-b-full bg-[var(--accent)]"
+                    aria-hidden
+                  />
+                )}
+                <Icon size={24} strokeWidth={1.75} aria-hidden />
+                {/* Label slot is always rendered so the icon never shifts
+                    when the ember rail slides — it only fades in when active.
+                    The text stays in the accessibility tree either way. */}
                 <span
                   className={cn(
-                    "absolute top-0 left-1/2 -translate-x-1/2 h-[2px] w-8 rounded-b-full",
-                    "transition-opacity duration-150",
-                    active ? "bg-[var(--accent)] opacity-100" : "opacity-0"
-                  )}
-                  aria-hidden
-                />
-                <Icon
-                  size={19}
-                  strokeWidth={active ? 1.75 : 1.5}
-                  aria-hidden
-                />
-                <span
-                  className={cn(
-                    "text-[10px] tracking-wide",
-                    active ? "font-semibold" : "font-medium"
+                    "text-[10px] font-medium leading-none tracking-wide",
+                    "transition-opacity duration-200",
+                    active ? "opacity-100" : "opacity-0"
                   )}
                 >
                   {t.label}

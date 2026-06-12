@@ -44,8 +44,8 @@ export function StatsBand() {
               <NumberTicker value={s.value} />
             </div>
             <p
-              className="mt-3 text-[13px] uppercase text-[#6B6B6B]"
-              style={{ letterSpacing: "0.1em" }}
+              className="mt-3 text-[13px] uppercase text-[#8B877E]"
+              style={{ fontFamily: "var(--font-mono)", letterSpacing: "0.1em" }}
             >
               {s.label}
             </p>

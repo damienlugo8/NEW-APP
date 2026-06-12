@@ -13,7 +13,11 @@ export default function SignUpPage({
     <>
       <AuthHeader
         eyebrow="Create account"
-        title="Start your 14-day trial."
+        title={
+          <>
+            Start your <span className="font-mono t-num">14</span>-day trial.
+          </>
+        }
         subtitle="No credit card. Cancel any time. Full access to every feature."
       />
       <SignUpForm />

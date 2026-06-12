@@ -32,7 +32,7 @@ export function MarketingNav() {
           <ThemeToggle className="hidden sm:inline-flex" />
           <Link
             href="/login"
-            className="text-sm text-[var(--text-muted)] hover:text-[var(--text)] transition-colors"
+            className="inline-flex h-11 items-center text-sm text-[var(--text-muted)] hover:text-[var(--text)] transition-colors sm:h-9"
           >
             Sign in
           </Link>

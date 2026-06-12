@@ -114,7 +114,7 @@ export function SquadCalloutSheet({
               <button
                 type="button"
                 onClick={onClose}
-                className="h-8 w-8 inline-flex items-center justify-center rounded-[var(--radius-sm)] text-[var(--text-subtle)] hover:bg-[var(--surface-2)] hover:text-[var(--text)] transition-colors"
+                className="h-11 w-11 sm:h-8 sm:w-8 -mr-1.5 inline-flex items-center justify-center rounded-[var(--radius-sm)] text-[var(--text-subtle)] hover:bg-[var(--surface-2)] hover:text-[var(--text)] active:scale-[0.97] transition duration-200"
                 aria-label="Close"
               >
                 <X size={15} strokeWidth={1.5} />
@@ -129,7 +129,7 @@ export function SquadCalloutSheet({
                     type="button"
                     onClick={() => setMessage(p)}
                     className={cn(
-                      "text-[12px] px-2.5 py-1.5 rounded-full border transition-colors text-left",
+                      "inline-flex items-center text-left min-h-11 sm:min-h-9 text-[12px] px-3 py-1.5 rounded-full border active:scale-[0.97] transition duration-200",
                       message === p
                         ? "border-[var(--accent)] text-[var(--accent)] bg-[var(--accent-soft)]"
                         : "border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text)]"
@@ -151,12 +151,19 @@ export function SquadCalloutSheet({
                 )}
                 placeholder="Say your piece…"
               />
-              <p className="t-caption text-[var(--text-subtle)] text-right">
+              <p className="t-caption t-num text-[var(--text-subtle)] text-right">
                 {message.length}/140
               </p>
 
               {error && (
-                <div className="flex items-center gap-2 px-3 py-2 rounded-[var(--radius-sm)] bg-[color-mix(in_oklab,var(--danger,#dc2626)_18%,transparent)] text-[12px] text-[var(--danger,#dc2626)]">
+                <div
+                  className="flex items-center gap-2 px-3 py-2 rounded-[var(--radius-sm)] text-[12px]"
+                  style={{
+                    background:
+                      "color-mix(in oklab, var(--danger) 18%, transparent)",
+                    color: "var(--danger)",
+                  }}
+                >
                   <AlertTriangle size={13} strokeWidth={1.75} />
                   <span>{error}</span>
                 </div>

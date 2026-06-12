@@ -97,12 +97,12 @@ export function FuelLogMealSheet({ open, onClose, onSubmit }: LogMealSheetProps)
             className={cn(
               "relative w-full sm:max-w-[480px]",
               "bg-[var(--surface)] border border-[var(--border)]",
-              "rounded-t-[var(--radius)] sm:rounded-[var(--radius)]",
+              "rounded-t-[var(--radius-lg)] sm:rounded-[var(--radius-lg)]",
               "shadow-[var(--shadow-md)]",
               "pb-[env(safe-area-inset-bottom)]"
             )}
           >
-            <header className="flex items-center justify-between px-5 h-12 border-b border-[var(--border-soft)]">
+            <header className="flex items-center justify-between pl-5 pr-2 sm:pr-3 h-14 sm:h-12 border-b border-[var(--border-soft)]">
               <p className="text-sm font-medium text-[var(--text)]">
                 {mode === "choose" && "Log a meal"}
                 {mode === "camera" && "Snap it"}
@@ -111,7 +111,7 @@ export function FuelLogMealSheet({ open, onClose, onSubmit }: LogMealSheetProps)
               <button
                 type="button"
                 onClick={onClose}
-                className="h-8 w-8 inline-flex items-center justify-center rounded-[var(--radius-sm)] text-[var(--text-subtle)] hover:bg-[var(--surface-2)] hover:text-[var(--text)] transition-colors"
+                className="h-11 w-11 sm:h-8 sm:w-8 inline-flex items-center justify-center rounded-[var(--radius-sm)] text-[var(--text-subtle)] hover:bg-[var(--surface-2)] hover:text-[var(--text)] transition active:scale-[0.97]"
                 aria-label="Close"
               >
                 <X size={15} strokeWidth={1.5} />
@@ -190,7 +190,7 @@ function ChoiceButton({
       className={cn(
         "w-full flex items-center gap-3 px-4 py-3 rounded-[var(--radius)]",
         "border border-[var(--border)] bg-[var(--bg)] text-left",
-        "hover:bg-[var(--surface-2)] transition-colors"
+        "hover:bg-[var(--surface-2)] transition active:scale-[0.97]"
       )}
     >
       <span className="h-9 w-9 inline-flex items-center justify-center rounded-full bg-[var(--accent-soft)] text-[var(--accent)]">
@@ -198,7 +198,7 @@ function ChoiceButton({
       </span>
       <span className="min-w-0">
         <span className="block text-sm font-medium text-[var(--text)]">{title}</span>
-        <span className="block t-caption text-[var(--text-subtle)] mt-0.5">{sub}</span>
+        <span className="block text-[12px] leading-snug text-[var(--text-subtle)] mt-0.5">{sub}</span>
       </span>
     </button>
   );
@@ -300,7 +300,7 @@ function CameraPane({
             <button
               type="button"
               onClick={onBack}
-              className="mt-3 t-caption text-[var(--text-subtle)] hover:text-[var(--text)]"
+              className="mt-2 -ml-2 px-2 h-11 sm:h-9 inline-flex items-center t-caption text-[var(--text-subtle)] hover:text-[var(--text)] transition-colors"
             >
               ← back
             </button>
@@ -390,16 +390,16 @@ function ConfirmAnalyzed({
 
       <div className="grid grid-cols-4 gap-2">
         <FormField label="kcal" compact>
-          <input value={kcal} onChange={(e) => setKcal(e.target.value)} className={fieldClass} inputMode="numeric" />
+          <input value={kcal} onChange={(e) => setKcal(e.target.value)} className={numFieldClass} inputMode="numeric" />
         </FormField>
         <FormField label="P (g)" compact>
-          <input value={p} onChange={(e) => setP(e.target.value)} className={fieldClass} inputMode="numeric" />
+          <input value={p} onChange={(e) => setP(e.target.value)} className={numFieldClass} inputMode="numeric" />
         </FormField>
         <FormField label="C (g)" compact>
-          <input value={c} onChange={(e) => setC(e.target.value)} className={fieldClass} inputMode="numeric" />
+          <input value={c} onChange={(e) => setC(e.target.value)} className={numFieldClass} inputMode="numeric" />
         </FormField>
         <FormField label="F (g)" compact>
-          <input value={f} onChange={(e) => setF(e.target.value)} className={fieldClass} inputMode="numeric" />
+          <input value={f} onChange={(e) => setF(e.target.value)} className={numFieldClass} inputMode="numeric" />
         </FormField>
       </div>
 
@@ -409,11 +409,11 @@ function ConfirmAnalyzed({
         <button
           type="button"
           onClick={onRetry}
-          className="t-caption text-[var(--text-subtle)] hover:text-[var(--text)]"
+          className="-ml-2 px-2 h-11 sm:h-9 inline-flex items-center t-caption text-[var(--text-subtle)] hover:text-[var(--text)] transition-colors"
         >
           ← re-snap
         </button>
-        <Button type="submit" disabled={submitting}>
+        <Button type="submit" disabled={submitting} className="active:scale-[0.97]">
           {submitting ? "Saving…" : "Log meal"}
         </Button>
       </div>
@@ -471,16 +471,16 @@ function ManualPane({
 
       <div className="grid grid-cols-4 gap-2">
         <FormField label="kcal" compact>
-          <input value={kcal} onChange={(e) => setKcal(e.target.value)} className={fieldClass} inputMode="numeric" />
+          <input value={kcal} onChange={(e) => setKcal(e.target.value)} className={numFieldClass} inputMode="numeric" />
         </FormField>
         <FormField label="P (g)" compact>
-          <input value={p} onChange={(e) => setP(e.target.value)} className={fieldClass} inputMode="numeric" />
+          <input value={p} onChange={(e) => setP(e.target.value)} className={numFieldClass} inputMode="numeric" />
         </FormField>
         <FormField label="C (g)" compact>
-          <input value={c} onChange={(e) => setC(e.target.value)} className={fieldClass} inputMode="numeric" />
+          <input value={c} onChange={(e) => setC(e.target.value)} className={numFieldClass} inputMode="numeric" />
         </FormField>
         <FormField label="F (g)" compact>
-          <input value={f} onChange={(e) => setF(e.target.value)} className={fieldClass} inputMode="numeric" />
+          <input value={f} onChange={(e) => setF(e.target.value)} className={numFieldClass} inputMode="numeric" />
         </FormField>
       </div>
 
@@ -490,11 +490,15 @@ function ManualPane({
         <button
           type="button"
           onClick={onBack}
-          className="t-caption text-[var(--text-subtle)] hover:text-[var(--text)]"
+          className="-ml-2 px-2 h-11 sm:h-9 inline-flex items-center t-caption text-[var(--text-subtle)] hover:text-[var(--text)] transition-colors"
         >
           ← back
         </button>
-        <Button type="submit" disabled={submitting || !name.trim()}>
+        <Button
+          type="submit"
+          disabled={submitting || !name.trim()}
+          className="active:scale-[0.97]"
+        >
           {submitting ? "Saving…" : "Log meal"}
         </Button>
       </div>
@@ -507,10 +511,14 @@ function ManualPane({
 // ─────────────────────────────────────────────────────────────────────────
 
 const fieldClass = cn(
-  "w-full h-9 px-3 rounded-[var(--radius-sm)] bg-[var(--bg)]",
+  "w-full h-11 sm:h-9 px-3 rounded-[var(--radius-sm)] bg-[var(--bg)]",
   "border border-[var(--border)] text-sm text-[var(--text)]",
   "focus:outline-none focus:border-[var(--accent)] transition-colors"
 );
+
+// Numeric fields (kcal / P / C / F) render in Geist Mono with tabular figures
+// so the digits line up with the dashboard numbers they feed.
+const numFieldClass = cn(fieldClass, "font-mono t-num");
 
 function FormField({
   label,
@@ -538,7 +546,13 @@ function FormField({
 
 function ErrorRow({ msg }: { msg: string }) {
   return (
-    <div className="flex items-center gap-2 px-3 py-2 rounded-[var(--radius-sm)] bg-[color-mix(in_oklab,var(--danger,#dc2626)_18%,transparent)] text-[12px] text-[var(--danger,#dc2626)]">
+    <div
+      className="flex items-center gap-2 px-3 py-2 rounded-[var(--radius-sm)] text-[12px]"
+      style={{
+        background: "color-mix(in oklab, var(--danger) 18%, transparent)",
+        color: "var(--danger)",
+      }}
+    >
       <AlertTriangle size={13} strokeWidth={1.75} />
       <span>{msg}</span>
     </div>

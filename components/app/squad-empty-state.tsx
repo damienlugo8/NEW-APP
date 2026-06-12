@@ -45,7 +45,7 @@ export function SquadEmptyState({
           <Users size={24} strokeWidth={1.5} className="text-[var(--accent)]" />
         </span>
 
-        <h1 className="font-serif text-[32px] sm:text-[40px] leading-[1.05] text-[var(--text)]">
+        <h1 className="font-bold tracking-[-0.01em] text-[32px] sm:text-[40px] leading-[1.05] text-[var(--text)]">
           Five guys.
           <br />
           One standard.
@@ -67,7 +67,9 @@ export function SquadEmptyState({
         </div>
 
         {error && (
-          <p className="mt-4 text-[13px] text-[var(--danger,#dc2626)]">{error}</p>
+          <p className="mt-4 text-[13px]" style={{ color: "var(--danger)" }}>
+            {error}
+          </p>
         )}
       </motion.div>
     </div>
